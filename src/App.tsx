@@ -1,10 +1,11 @@
+import { Messenger } from "./components/Messenger"
 import GlobalStyle from "./style/global"
 
 function App() {
     return (
         <div className="App">
             <GlobalStyle />
-            <h1>Messenger</h1>
+            <Messenger />
         </div>
     )
 }
