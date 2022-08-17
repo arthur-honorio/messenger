@@ -1,16 +1,26 @@
 import React from "react"
 
 import { Container } from "./style"
-import { ContactInfo } from "../ContactInfo"
-import { MessagesList } from "../MessagesList"
-import { MessageInput } from "../MessageInput"
+import { UserDetails } from "../UserDetails"
+// import { MessagesList } from "../MessagesList"
+// import { MessageInput } from "../MessageInput"
 
 export const Conversation: React.FC = () => {
     return (
         <Container>
-            <ContactInfo />
+            <UserDetails
+                imageSize="M"
+                isFromProfile={false}
+                user={{
+                    imageSrc: "",
+                    name: "Arthur",
+                    position: "FrontEnd",
+                    status: "online",
+                }}
+            />
+            {/* 
             <MessagesList />
-            <MessageInput />
+            <MessageInput /> */}
         </Container>
     )
 }
