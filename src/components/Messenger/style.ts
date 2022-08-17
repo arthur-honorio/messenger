@@ -1,11 +1,10 @@
 import styled from "styled-components"
 
 export const Container = styled.div`
-    width: 70%;
-    height: 64vh;
+    width: 100%;
+    height: 100%;
     background: white;
-    margin: 18vh auto;
     border-radius: 6px;
     display: grid;
-    grid-template-columns: 42% 58%;
+    grid-template-columns: minmax(350px, 450px) auto;
 `
