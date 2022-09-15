@@ -1,15 +1,7 @@
 import React from "react"
+import { ConversationsListItem, ListItemProps } from "./ConversationsListItem"
 
 import { Container } from "./style"
-
-export type ListItemProps = {
-    user: string
-    last_message: string
-    last_message_date: string | Date
-    status: string
-    unread_messages_count: number
-    message_status: string
-}
 
 export type ConversationsListProps = {
     conversationsList: ListItemProps[]
@@ -19,9 +11,9 @@ export const ConversationsList: React.FC<ConversationsListProps> = ({
     conversationsList,
 }) => {
     function renderConversationList(list: ListItemProps[]): React.ReactNode[] {
-        return list.map(conversation => (
-            <li>
-                {/* <ConversationsListItem {...conversation} /> */}
+        return list.map((conversation, index) => (
+            <li key={index}>
+                <ConversationsListItem {...conversation} />
             </li>
         ))
     }
