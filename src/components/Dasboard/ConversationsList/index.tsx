@@ -25,5 +25,9 @@ export const ConversationsList: React.FC<ConversationsListProps> = ({
             </li>
         ))
     }
-    return <Container>{renderConversationList(conversationsList)}</Container>
+    return (
+        <Container className="conversations-list">
+            {renderConversationList(conversationsList)}
+        </Container>
+    )
 }

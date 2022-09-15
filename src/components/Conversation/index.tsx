@@ -7,7 +7,7 @@ import { UserDetails } from "../UserDetails"
 
 export const Conversation: React.FC = () => {
     return (
-        <Container>
+        <Container className="conversation">
             <UserDetails
                 imageSize="M"
                 isFromProfile={false}

@@ -15,7 +15,7 @@ export const UserImageAndStatus: React.FC<UserImageAndStatusProps> = ({
     user,
 }) => {
     return (
-        <Container size={imageSize}>
+        <Container className="user-image-and-status" size={imageSize}>
             <UserImage src={user.imageSrc} alt="User" size={imageSize} />
             <UserStatus size={imageSize} status={user.status} />
         </Container>

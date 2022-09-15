@@ -5,7 +5,7 @@ import { Container } from "./style"
 
 export const Messenger: React.FC = () => {
     return (
-        <Container>
+        <Container className="messenger">
             <Dashboard />
             <Conversation />
         </Container>
