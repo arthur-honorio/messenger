@@ -12,7 +12,7 @@ type UserProps = {
     status: string
 }
 
-type UserDetailsProps = {
+export type UserDetailsProps = {
     isFromProfile: boolean
     imageSize: string
     user: UserProps

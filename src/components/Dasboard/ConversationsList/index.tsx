@@ -21,7 +21,7 @@ export const ConversationsList: React.FC<ConversationsListProps> = ({
     function renderConversationList(list: ListItemProps[]): React.ReactNode[] {
         return list.map(conversation => (
             <li>
-                <ConversationsListItem {...conversation} />
+                {/* <ConversationsListItem {...conversation} /> */}
             </li>
         ))
     }
