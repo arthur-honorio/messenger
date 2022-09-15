@@ -7,6 +7,7 @@ export type UserImageAndStatusProps = {
     user: {
         imageSrc: string
         status: string
+        name?: string
     }
 }
 

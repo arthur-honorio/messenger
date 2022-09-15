@@ -14,7 +14,11 @@ export const Dashboard: React.FC = () => {
             <ConversationsList
                 conversationsList={[
                     {
-                        user: "1",
+                        user: {
+                            name: "Arthur",
+                            status: "busy",
+                            imageSrc: "",
+                        },
                         last_message: "Teste",
                         last_message_date: new Date(),
                         status: "online",
@@ -22,7 +26,11 @@ export const Dashboard: React.FC = () => {
                         message_status: "received",
                     },
                     {
-                        user: "1",
+                        user: {
+                            name: "Arthur",
+                            status: "busy",
+                            imageSrc: "",
+                        },
                         last_message: "Teste",
                         last_message_date: new Date(),
                         status: "online",
