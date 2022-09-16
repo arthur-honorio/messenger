@@ -1,5 +1,5 @@
 import React from "react"
-import { UserImageAndStatus } from "../../../UserImageAndStatus"
+import { UserImageAndStatus } from "../../../UserProfile/UserImageAndStatus"
 
 import { Container } from "./style"
 

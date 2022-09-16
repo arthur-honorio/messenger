@@ -1,5 +1,5 @@
 import React from "react"
-import { ConversationsListItem, ListItemProps } from "./ConversationsListItem"
+import { ConversationsListItem, ListItemProps } from ".."
 
 import { Container } from "./style"
 
