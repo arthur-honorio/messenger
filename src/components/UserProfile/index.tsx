@@ -1,21 +1,44 @@
 import React from "react"
-import { UserDetails } from "../UserDetails"
 
-import { Container } from "./style"
+import { Container, EditButton, UserDetails } from "./style"
+import { UserImageAndStatus } from "./UserImageAndStatus"
+import { UserInfo } from "./UserInfo"
+import { FaPencilAlt } from "react-icons/fa"
 
-export const UserProfile: React.FC = () => {
+export type UserContainerProps = {
+    isFromProfile: boolean
+    imgSize: string
+}
+
+export const UserProfile: React.FC<UserContainerProps> = ({
+    isFromProfile,
+    imgSize,
+}) => {
     return (
-        <Container>
-            <UserDetails
-                isFromProfile
-                imageSize={"L"}
-                user={{
-                    name: "Arthur",
-                    position: "Frontend",
-                    imageSrc: "",
-                    status: "online",
-                }}
-            />
+        <Container className="user-profile" isFromProfile={isFromProfile}>
+            <UserDetails className="user-details">
+                <UserImageAndStatus
+                    imageSize={imgSize}
+                    user={{
+                        name: "Arthur",
+                        imageSrc: "",
+                        status: "online",
+                    }}
+                />
+                <UserInfo
+                    user={{
+                        name: "Arthur",
+                        position: "Frontend",
+                    }}
+                />
+            </UserDetails>
+            {isFromProfile ? (
+                <EditButton onClick={() => {}}>
+                    <FaPencilAlt />
+                </EditButton>
+            ) : (
+                <></>
+            )}
         </Container>
     )
 }
