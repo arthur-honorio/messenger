@@ -7,7 +7,7 @@ export const SearchBar: React.FC = () => {
     return (
         <Container className="search-bar">
             <FaSearch />
-            <input type="search" placeholder="Busque mensagens ou usuários" />
+            <input  type="text" placeholder="Busque mensagens ou usuários" />
         </Container>
     )
 }
