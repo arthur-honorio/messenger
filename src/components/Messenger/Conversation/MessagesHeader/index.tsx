@@ -8,7 +8,7 @@ export const MessagesHeader: React.FC = () => {
     return (
         <Container className="messages-header">
             <UserProfile imgSize="M" isFromProfile={false} />
-            <MessagesHeaderButtons>
+            <MessagesHeaderButtons className="messages-header-buttons">
                 <FaSearch onClick={() => {}} />
                 <FaFile onClick={() => {}} />
             </MessagesHeaderButtons>

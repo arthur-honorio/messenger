@@ -8,4 +8,8 @@ export const Container = styled.header`
 export const MessagesHeaderButtons = styled.div`
     display: flex;
     gap: 20px;
+
+    svg {
+        cursor: pointer;
+    }
 `
