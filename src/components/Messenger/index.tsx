@@ -5,9 +5,15 @@ import { Login } from "../Login"
 import { Conversation } from "./Conversation"
 import { Dashboard } from "./Dashboard"
 import { Container } from "./style"
+import shallow from "zustand/shallow"
 
 export const Messenger: React.FC = () => {
-    const { currentUser } = useLoggedUserStore.getState()
+    const { currentUser } = useLoggedUserStore(
+        state => ({
+            currentUser: state.currentUser,
+        }),
+        shallow
+    )
     if (currentUser) {
         return (
             <Container className="messenger">

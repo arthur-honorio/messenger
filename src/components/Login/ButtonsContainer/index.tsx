@@ -1,6 +1,5 @@
 import React from "react"
 import { signIn } from "../../../firebase"
-import { useLoggedUserStore } from "../../../states/loggedUser"
 import { useSnackbarStore } from "../../../states/snackbar"
 
 import { Container } from "./style"
@@ -22,7 +21,6 @@ export const ButtonsContainer: React.FC<ButtonsContainerProps> = ({
         if (email && password) {
             const user = await signIn(email, password)
             if (typeof user === "object") {
-                useLoggedUserStore.setState({ currentUser: user })
                 useSnackbarStore.setState({
                     open: true,
                     message: `Usuário logado: ${user.user.email}`,

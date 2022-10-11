@@ -1,5 +1,10 @@
 import { initializeApp } from "firebase/app"
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from "firebase/auth"
+import {
+    createUserWithEmailAndPassword,
+    getAuth,
+    signInWithEmailAndPassword,
+} from "firebase/auth"
+import { useLoggedUserStore } from "../states/loggedUser"
 
 const firebaseConfig = {
     apiKey: "AIzaSyBk8rE8nbIPFy-lhFsp9GV5NJyzmki-71Q",
@@ -14,24 +19,41 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
 
-export const signUp = async (email: string, password: string) => {
-    let signUpResponse
-    try {
-        signUpResponse = await createUserWithEmailAndPassword(auth, email, password)
-        if (signUpResponse) return signUpResponse
-    } catch (err: any) {
-        console.log(Object.entries(err))
-    }
-}
-
 export const signIn = async (email: string, password: string) => {
-    let signInResponse
+    const { setCurrentUser, setAuth } = useLoggedUserStore.getState()
     try {
-        signInResponse = await signInWithEmailAndPassword(auth, email, password)
-        if (signInResponse) return signInResponse
+        const signInResponse = await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+        )
+        if (signInResponse) {
+            setCurrentUser(signInResponse.user)
+            setAuth(auth)
+            return signInResponse
+        }
     } catch (err: any) {
         if (err.code === "auth/user-not-found") {
             return "user-not-found"
         } else console.log(Object.entries(err))
+    }
+}
+
+export const signUp = async (email: string, password: string) => {
+    const { setCurrentUser, setAuth } = useLoggedUserStore.getState()
+    let signUpResponse
+    try {
+        signUpResponse = await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+        )
+        if (signUpResponse) {
+            setCurrentUser(signUpResponse.user)
+            setAuth(auth)
+            return signUpResponse
+        }
+    } catch (err: any) {
+        console.log(Object.entries(err))
     }
 }

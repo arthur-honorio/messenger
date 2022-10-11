@@ -22,16 +22,18 @@ export const UserProfile: React.FC<UserContainerProps> = ({
     isFromProfile,
     imgSize,
 }) => {
-    const {auth} = useLoggedUserStore.getState()
-    const handleClick = () => {
-        signOut(auth).then(() => {
-            useLoggedUserStore.setState({ currentUser: undefined })
-            useSnackbarStore.setState({
-                open: true,
-                message: "Usuário deslogado com sucesso",
-                type: "info",
+    const { auth, setAuth, setCurrentUser } = useLoggedUserStore.getState()
+    const handleClick = async () => {
+        if (auth)
+            signOut(auth).then(e => {
+                setCurrentUser(null)
+                setAuth(null)
+                useSnackbarStore.setState({
+                    open: true,
+                    message: "Usuário deslogado com sucesso",
+                    type: "info",
+                })
             })
-        })
     }
     return (
         <Container className="user-profile" isFromProfile={isFromProfile}>
