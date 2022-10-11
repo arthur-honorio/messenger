@@ -6,11 +6,11 @@ import { useSnackbarStore } from "../../../states/snackbar"
 import { Container } from "./style"
 
 type ButtonsContainerProps = {
-    setShowSignup: (arg0: boolean) => void
+    setShowSignUp: (arg0: boolean) => void
 }
 
 export const ButtonsContainer: React.FC<ButtonsContainerProps> = ({
-    setShowSignup,
+    setShowSignUp,
 }) => {
     const handleLogInClick = async (event: React.MouseEvent) => {
         event.preventDefault()
@@ -40,7 +40,7 @@ export const ButtonsContainer: React.FC<ButtonsContainerProps> = ({
 
     const handleSignUpClick = (event: React.MouseEvent) => {
         event.preventDefault()
-        setShowSignup(true)
+        setShowSignUp(true)
     }
 
     return (

@@ -1,22 +1,22 @@
 import React, { useState } from "react"
 import { ButtonsContainer } from "./ButtonsContainer"
-import { SignUp } from "./Signup"
+import { SignUp } from "./SignUp"
 
 import { Container } from "./style"
 
 export const Login: React.FC = () => {
-    const [showSignUp, setShowSignup] = useState(false)
-    
+    const [showSignUp, setShowSignUp] = useState(false)
+
     return (
         <Container>
             <h1>Rav-Messenger</h1>
             <form>
                 <input id="email" type="text" placeholder="E-mail" />
                 <input id="password" type="password" placeholder="Senha" />
-                <ButtonsContainer setShowSignup={setShowSignup} />
+                <ButtonsContainer setShowSignUp={setShowSignUp} />
             </form>
 
-            {showSignUp && <SignUp />}
+            {showSignUp && <SignUp setShowSignUp={setShowSignUp} />}
         </Container>
     )
 }
