@@ -31,7 +31,7 @@ export const MessageContainer = styled.div<ContainerProps>`
 
     color: ${props => (props.isUserLoggedIn ? "white" : "black")};
     background-color: ${props =>
-        props.isUserLoggedIn ? "orange" : "greenyellow"};
+        props.isUserLoggedIn ? "orchid" : "greenyellow"};
     border-radius: ${props =>
         props.isUserLoggedIn ? "40px 40px 0 40px" : "0 40px 40px 40px"};
 

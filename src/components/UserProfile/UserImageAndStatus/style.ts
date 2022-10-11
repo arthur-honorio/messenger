@@ -41,5 +41,5 @@ export const UserImage = styled.img<UserImageProps>`
     height: ${props =>
         props.size === "L" ? "70px" : props.size === "M" ? "55px" : "40px"};
     border-radius: 100%;
-    background: orange;
+    background: orchid;
 `
