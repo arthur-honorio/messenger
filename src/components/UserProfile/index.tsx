@@ -1,4 +1,11 @@
-import React from "react"
+import React, { useState } from "react"
+import { UserImageAndStatus } from "./UserImageAndStatus"
+import { UserInfo } from "./UserInfo"
+import { FaPencilAlt, FaSignOutAlt } from "react-icons/fa"
+import { getAuth, signOut } from "firebase/auth"
+import { useLoggedUserStore } from "../../states/loggedUser"
+import { useSnackbarStore } from "../../states/snackbar"
+import { updateProfile } from "firebase/auth"
 
 import {
     Container,
@@ -6,12 +13,7 @@ import {
     UserProfileButton,
     UserProfileButtonsContainer,
 } from "./style"
-import { UserImageAndStatus } from "./UserImageAndStatus"
-import { UserInfo } from "./UserInfo"
-import { FaPencilAlt, FaSignOutAlt } from "react-icons/fa"
-import { signOut } from "firebase/auth"
-import { useLoggedUserStore } from "../../states/loggedUser"
-import { useSnackbarStore } from "../../states/snackbar"
+import { UserEditionModal } from "./UserEditionModal"
 
 export type UserContainerProps = {
     isFromProfile: boolean
@@ -22,18 +24,16 @@ export const UserProfile: React.FC<UserContainerProps> = ({
     isFromProfile,
     imgSize,
 }) => {
-    const { auth, setAuth, setCurrentUser } = useLoggedUserStore.getState()
+    const [editUser, setEditUser] = useState(false)
+
     const handleClick = async () => {
-        if (auth)
-            signOut(auth).then(e => {
-                setCurrentUser(null)
-                setAuth(null)
-                useSnackbarStore.setState({
-                    open: true,
-                    message: "Usuário deslogado com sucesso",
-                    type: "info",
-                })
+        signOut(getAuth()).then(e => {
+            useSnackbarStore.setState({
+                open: true,
+                message: "Usuário deslogado com sucesso",
+                type: "info",
             })
+        })
     }
     return (
         <Container className="user-profile" isFromProfile={isFromProfile}>
@@ -54,11 +54,20 @@ export const UserProfile: React.FC<UserContainerProps> = ({
                 />
             </UserDetails>
             {isFromProfile ? (
-                <UserProfileButtonsContainer>
-                    <UserProfileButton onClick={() => {}}>
+                <UserProfileButtonsContainer className="user-buttons">
+                    {editUser ? <UserEditionModal /> : <></>}
+                    <UserProfileButton
+                        className="user-edit"
+                        onClick={() => {
+                            setEditUser(true)
+                        }}
+                    >
                         <FaPencilAlt />
                     </UserProfileButton>
-                    <UserProfileButton onClick={handleClick}>
+                    <UserProfileButton
+                        className="user-signout"
+                        onClick={handleClick}
+                    >
                         <FaSignOutAlt />
                     </UserProfileButton>
                 </UserProfileButtonsContainer>

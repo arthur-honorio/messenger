@@ -4,7 +4,6 @@ import {
     getAuth,
     signInWithEmailAndPassword,
 } from "firebase/auth"
-import { useLoggedUserStore } from "../states/loggedUser"
 
 const firebaseConfig = {
     apiKey: "AIzaSyBk8rE8nbIPFy-lhFsp9GV5NJyzmki-71Q",
@@ -20,7 +19,6 @@ export const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
 
 export const signIn = async (email: string, password: string) => {
-    const { setCurrentUser, setAuth } = useLoggedUserStore.getState()
     try {
         const signInResponse = await signInWithEmailAndPassword(
             auth,
@@ -28,8 +26,6 @@ export const signIn = async (email: string, password: string) => {
             password
         )
         if (signInResponse) {
-            setCurrentUser(signInResponse.user)
-            setAuth(auth)
             return signInResponse
         }
     } catch (err: any) {
@@ -40,7 +36,6 @@ export const signIn = async (email: string, password: string) => {
 }
 
 export const signUp = async (email: string, password: string) => {
-    const { setCurrentUser, setAuth } = useLoggedUserStore.getState()
     let signUpResponse
     try {
         signUpResponse = await createUserWithEmailAndPassword(
@@ -49,8 +44,6 @@ export const signUp = async (email: string, password: string) => {
             password
         )
         if (signUpResponse) {
-            setCurrentUser(signUpResponse.user)
-            setAuth(auth)
             return signUpResponse
         }
     } catch (err: any) {

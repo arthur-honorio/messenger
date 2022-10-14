@@ -1,20 +1,15 @@
 import moment from "moment"
 import React from "react"
-import { useLoggedUserStore } from "../../states/loggedUser"
 import { Login } from "../Login"
 import { Conversation } from "./Conversation"
 import { Dashboard } from "./Dashboard"
 import { Container } from "./style"
-import shallow from "zustand/shallow"
+import { useAuthState } from "react-firebase-hooks/auth"
+import { getAuth } from "firebase/auth"
 
 export const Messenger: React.FC = () => {
-    const { currentUser } = useLoggedUserStore(
-        state => ({
-            currentUser: state.currentUser,
-        }),
-        shallow
-    )
-    if (currentUser) {
+    const [user] = useAuthState(getAuth())
+    if (user) {
         return (
             <Container className="messenger">
                 <Dashboard />
