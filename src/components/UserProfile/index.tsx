@@ -3,9 +3,7 @@ import { UserImageAndStatus } from "./UserImageAndStatus"
 import { UserInfo } from "./UserInfo"
 import { FaPencilAlt, FaSignOutAlt } from "react-icons/fa"
 import { getAuth, signOut } from "firebase/auth"
-import { useLoggedUserStore } from "../../states/loggedUser"
 import { useSnackbarStore } from "../../states/snackbar"
-import { updateProfile } from "firebase/auth"
 
 import {
     Container,
@@ -13,6 +11,7 @@ import {
     UserProfileButton,
     UserProfileButtonsContainer,
 } from "./style"
+import { useAuthState } from "react-firebase-hooks/auth"
 import { UserEditionModal } from "./UserEditionModal"
 
 export type UserContainerProps = {
@@ -24,9 +23,10 @@ export const UserProfile: React.FC<UserContainerProps> = ({
     isFromProfile,
     imgSize,
 }) => {
+    const [user] = useAuthState(getAuth())
     const [editUser, setEditUser] = useState(false)
 
-    const handleClick = async () => {
+    const handleSignOut = async () => {
         signOut(getAuth()).then(e => {
             useSnackbarStore.setState({
                 open: true,
@@ -35,27 +35,28 @@ export const UserProfile: React.FC<UserContainerProps> = ({
             })
         })
     }
+
     return (
         <Container className="user-profile" isFromProfile={isFromProfile}>
             <UserDetails className="user-details">
                 <UserImageAndStatus
                     imageSize={imgSize}
                     user={{
-                        name: "Arthur",
-                        imageSrc: "",
+                        name: user?.displayName || undefined,
+                        imageSrc: user?.photoURL || undefined,
                         status: "online",
                     }}
                 />
                 <UserInfo
                     user={{
-                        name: "Arthur",
+                        name: user?.displayName || undefined,
                         position: "Frontend",
                     }}
                 />
             </UserDetails>
             {isFromProfile ? (
                 <UserProfileButtonsContainer className="user-buttons">
-                    {editUser ? <UserEditionModal /> : <></>}
+                    <UserEditionModal show={editUser} />
                     <UserProfileButton
                         className="user-edit"
                         onClick={() => {
@@ -66,7 +67,7 @@ export const UserProfile: React.FC<UserContainerProps> = ({
                     </UserProfileButton>
                     <UserProfileButton
                         className="user-signout"
-                        onClick={handleClick}
+                        onClick={handleSignOut}
                     >
                         <FaSignOutAlt />
                     </UserProfileButton>
