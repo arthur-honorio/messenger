@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import { signUp } from "../../../firebase"
 import { IoCloseCircleSharp } from "react-icons/io5"
 
@@ -9,33 +9,22 @@ type signUpProps = {
 }
 
 export const SignUp: React.FC<signUpProps> = ({ setShowSignUp }) => {
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-
-    const handleClick = async () => {
-        signUp(email, password)
+    function handleSave(event: HTMLFormElement) {
+        const data = new FormData(event)
+        const { email, password } = Object.fromEntries(data.entries())
+        signUp(email.toString(), password.toString())
     }
 
     return (
-        <Container className="signUp">
-            <form>
+        <ModalContainer className="signUp">
+            <form
+                onSubmit={event => handleSave(event.target as HTMLFormElement)}
+            >
                 <IoCloseCircleSharp onClick={() => setShowSignUp(false)} />
-                <input
-                    onChange={e => setEmail(e.target.value)}
-                    type="text"
-                    required
-                    placeholder="E-mail"
-                />
-                <input
-                    onChange={e => setPassword(e.target.value)}
-                    type="password"
-                    required
-                    placeholder="Senha"
-                />
-                <button type="button" onClick={handleClick}>
-                    Criar Conta
-                </button>
+                <input type="email" required placeholder="E-mail" />
+                <input type="password" required placeholder="Senha" />
+                <button type="submit">Criar Conta</button>
             </form>
-        </Container>
+        </ModalContainer>
     )
 }
