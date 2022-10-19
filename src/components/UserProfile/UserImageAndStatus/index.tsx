@@ -5,9 +5,9 @@ import { Container, UserStatus, UserImage } from "./style"
 export type UserImageAndStatusProps = {
     imageSize: string
     user: {
-        imageSrc: string
-        status: string
-        name?: string
+        imageSrc: string | undefined
+        status: string | undefined
+        name?: string | undefined
     }
 }
 

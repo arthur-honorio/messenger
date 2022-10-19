@@ -3,7 +3,7 @@ import React from "react"
 import { Container } from "./style"
 
 type UserInfoProps = {
-    user: { name: string; position: string }
+    user: { name: string | undefined; position: string | undefined }
 }
 
 export const UserInfo: React.FC<UserInfoProps> = ({ user }) => {

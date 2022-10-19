@@ -2,12 +2,12 @@ import styled from "styled-components"
 
 type UserStatusProps = {
     size: string
-    status: string
+    status: string | undefined
 }
 
 type UserImageProps = {
     size: string
-    src: string
+    src: string | undefined
     alt: string
 }
 
