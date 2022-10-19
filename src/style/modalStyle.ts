@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { lighten } from "polished"
 
-export const Container = styled.div`
+export const ModalContainer = styled.div`
     position: absolute;
     background-color: rgba(255, 255, 255, 0.5);
     top: 0;
@@ -36,6 +36,10 @@ export const Container = styled.div`
             font-size: 30px;
             color: orchid;
             cursor: pointer;
+        }
+
+        h3 {
+            color: white;
         }
     }
 `

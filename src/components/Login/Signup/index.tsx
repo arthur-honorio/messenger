@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { signUp } from "../../../firebase"
 import { IoCloseCircleSharp } from "react-icons/io5"
 
-import { Container } from "./style"
+import { ModalContainer } from "../../../style/modalStyle"
 
 type signUpProps = {
     setShowSignUp: (arg0: boolean) => void

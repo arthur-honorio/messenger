@@ -44,7 +44,7 @@ export const ButtonsContainer: React.FC<ButtonsContainerProps> = ({
     return (
         <Container>
             <button onClick={handleLogInClick}>Entrar</button>
-            <button onClick={handleSignUpClick}>Criar conta</button>
+            <button className="alt-button" onClick={handleSignUpClick}>Criar conta</button>
         </Container>
     )
 }
