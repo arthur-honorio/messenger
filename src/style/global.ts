@@ -1,5 +1,5 @@
 import { createGlobalStyle } from "styled-components"
-import { darken } from "polished"
+import { darken, lighten } from "polished"
 
 export default createGlobalStyle`
     * {
@@ -20,7 +20,7 @@ export default createGlobalStyle`
 
     form {
         border-radius: 10px;
-        background: orchid;
+        background: darkcyan;
         width: 600px;
         height: 300px;
         display: flex;
@@ -29,38 +29,60 @@ export default createGlobalStyle`
         justify-content: center;
         padding: 50px;
         gap: 10px;
+        position: relative;
+
+        svg {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 25px;
+            color: white;
+            cursor: pointer;
+        }
+
+        footer {
+            margin-top: 10px;
+            display: flex;
+            width: 100%;
+            gap: 10px;
+        }
     }
 
-    input, button, button.alt-button {
+    input, button, button.alt-button, label.fake-button {
         width: 100%;
         height: 40px;
         padding: 10px 20px;
         border-radius: 10px;
         border: none;
+        text-align: center;
         transition: all 8 ease-in-out !important;
     }
 
-    input[type="file"] {
-        padding-left: 100px;
-    }
-
-    input[type="file"], button {
-        background-color: darkorchid;
+    button, label.fake-button {
+        background-color: orchid;
         color: white;
         font-weight: bold;
         font-size: 14px;
+        cursor: pointer;
     }
 
-    button:hover {
-        background-color: ${darken(0.05, "darkorchid")}
+    button:hover, label.fake-button:hover {
+        background-color: ${lighten(0.05, "darkorchid")};
+        box-shadow: 0 0 10px ${darken(0.05, "darkorchid")};
     }
     
     button.alt-button {
         background-color: white;
-        color: black;
+        color: darkgray;
     }
     
     button.alt-button:hover {
         background-color: ${darken(0.08, "white")}
+    }
+
+    button:disabled {
+        background-color: gray !important;
+        color: darkgray;
+        cursor: progress !important;
     }
 `
