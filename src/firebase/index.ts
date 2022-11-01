@@ -5,6 +5,12 @@ import {
     getAuth,
     signInWithEmailAndPassword,
 } from "firebase/auth"
+import {
+    getStorage,
+    ref,
+    uploadBytesResumable,
+    getDownloadURL,
+} from "firebase/storage"
 
 const firebaseConfig = {
     apiKey: "AIzaSyBk8rE8nbIPFy-lhFsp9GV5NJyzmki-71Q",
@@ -17,8 +23,29 @@ const firebaseConfig = {
 }
 
 const app = initializeApp(firebaseConfig)
+const storage = getStorage(app)
 const db = getFirestore(app)
 const auth = getAuth(app)
+
+export const uploadImage = (
+    file: any,
+    setPhotoURL: React.Dispatch<React.SetStateAction<string>>
+) => {
+    const fileName = `${file.lastModified}-${file.name}`
+    const storageRef = ref(storage, fileName)
+
+    const uploadTask = uploadBytesResumable(storageRef, file)
+    uploadTask.on(
+        "state_changed",
+        () => {},
+        error => {
+            console.log(Object.entries(error))
+        },
+        () => {
+            getDownloadURL(uploadTask.snapshot.ref).then(setPhotoURL)
+        }
+    )
+}
 
 export const createDocument = async (
     collectionName: string,
