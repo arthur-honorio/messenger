@@ -32,6 +32,7 @@ export const SignUp: React.FC<signUpProps> = ({ setShowSignUp }) => {
                     handleSave(event.target as HTMLFormElement)
                 }}
             >
+                <h2>Criar Conta</h2>
                 <IoCloseCircleSharp onClick={() => setShowSignUp(false)} />
                 <input
                     name="email"

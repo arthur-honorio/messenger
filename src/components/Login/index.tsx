@@ -13,6 +13,7 @@ export const Login: React.FC = () => {
             <Container>
                 <h1>Rav-Messenger</h1>
                 <form>
+                    <h2>Entrar</h2>
                     <input id="email" type="text" placeholder="E-mail" />
                     <input id="password" type="password" placeholder="Senha" />
                     <ButtonsContainer setShowSignUp={setShowSignUp} />

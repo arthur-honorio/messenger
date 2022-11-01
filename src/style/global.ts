@@ -46,6 +46,10 @@ export default createGlobalStyle`
             width: 100%;
             gap: 10px;
         }
+
+        h2 {
+            color: white;
+        }
     }
 
     input, button, button.alt-button, label.fake-button {
