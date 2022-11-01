@@ -56,7 +56,7 @@ export const UserProfile: React.FC<UserContainerProps> = ({
             </UserDetails>
             {isFromProfile ? (
                 <UserProfileButtonsContainer className="user-buttons">
-                    <UserEditionModal show={editUser} />
+                    <UserEditionModal show={editUser} setShow={setEditUser} />
                     <UserProfileButton
                         className="user-edit"
                         onClick={() => {
