@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app"
+import { getFirestore, setDoc, doc } from "firebase/firestore"
 import {
     createUserWithEmailAndPassword,
     getAuth,
@@ -15,8 +16,22 @@ const firebaseConfig = {
     measurementId: "G-JZXQ87EHZ8",
 }
 
-export const app = initializeApp(firebaseConfig)
+const app = initializeApp(firebaseConfig)
+const db = getFirestore(app)
 const auth = getAuth(app)
+
+export const createDocument = async (
+    collectionName: string,
+    dataToAdd: Object,
+    id: string
+) => {
+    try {
+        const docRef = doc(db, collectionName, id)
+        await setDoc(docRef, dataToAdd, { merge: true })
+    } catch (e: any) {
+        console.log(Object.entries(e))
+    }
+}
 
 export const signIn = async (email: string, password: string) => {
     try {
