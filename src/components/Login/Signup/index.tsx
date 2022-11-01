@@ -9,7 +9,7 @@ type signUpProps = {
 }
 
 export const SignUp: React.FC<signUpProps> = ({ setShowSignUp }) => {
-    function handleSave(event: HTMLFormElement) {
+    async function handleSave(event: HTMLFormElement) {
         const data = new FormData(event)
         const { email, password } = Object.fromEntries(data.entries())
         signUp(email.toString(), password.toString())
@@ -18,11 +18,24 @@ export const SignUp: React.FC<signUpProps> = ({ setShowSignUp }) => {
     return (
         <ModalContainer className="signUp">
             <form
-                onSubmit={event => handleSave(event.target as HTMLFormElement)}
+                onSubmit={event => {
+                    event.preventDefault()
+                    handleSave(event.target as HTMLFormElement)
+                }}
             >
                 <IoCloseCircleSharp onClick={() => setShowSignUp(false)} />
-                <input type="email" required placeholder="E-mail" />
-                <input type="password" required placeholder="Senha" />
+                <input
+                    name="email"
+                    type="email"
+                    required
+                    placeholder="E-mail"
+                />
+                <input
+                    name="password"
+                    type="password"
+                    required
+                    placeholder="Senha"
+                />
                 <button type="submit">Criar Conta</button>
             </form>
         </ModalContainer>
