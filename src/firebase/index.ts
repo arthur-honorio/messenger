@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app"
-import { getFirestore, setDoc, doc } from "firebase/firestore"
+import { getFirestore, setDoc, doc, updateDoc } from "firebase/firestore"
 import {
     createUserWithEmailAndPassword,
     getAuth,
@@ -60,6 +60,19 @@ export const createDocument = async (
     }
 }
 
+export const updateDocument = async (
+    collectionName: string,
+    dataToAdd: { [key: string]: any },
+    id: string
+) => {
+    try {
+        const docRef = doc(db, collectionName, id)
+        await updateDoc(docRef, dataToAdd)
+    } catch (e: any) {
+        console.log(Object.entries(e))
+    }
+}
+
 export const signIn = async (email: string, password: string) => {
     try {
         const signInResponse = await signInWithEmailAndPassword(
@@ -68,6 +81,12 @@ export const signIn = async (email: string, password: string) => {
             password
         )
         if (signInResponse) {
+            auth?.currentUser?.uid &&
+                await updateDocument(
+                    "users",
+                    { status: "online" },
+                    auth.currentUser.uid
+                )
             return signInResponse
         }
     } catch (err: any) {
