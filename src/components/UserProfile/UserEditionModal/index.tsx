@@ -4,7 +4,7 @@ import { useAuthState } from "react-firebase-hooks/auth"
 import { createDocument, uploadImage } from "../../../firebase"
 
 import { ModalContainer } from "../../../style/modalStyle"
-import { IoCloseCircleSharp } from "react-icons/io5"
+import { IoCloseCircleSharp, IoImages } from "react-icons/io5"
 
 type UserEditionModalProps = {
     show: boolean
@@ -112,9 +112,9 @@ export const UserEditionModal: React.FC<UserEditionModalProps> = ({
                     <label
                         htmlFor="file_uploader"
                         className="fake-button"
-                        onChange={console.log}
                     >
                         <span>Selecionar avatar</span>
+                        <IoImages />
                     </label>
                     <input
                         hidden

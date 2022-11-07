@@ -70,6 +70,18 @@ export default createGlobalStyle`
         cursor: pointer;
     }
 
+    label.fake-button {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    label.fake-button svg {
+        position: static;
+    }
+
     button:hover, label.fake-button:hover {
         background-color: ${lighten(0.05, "darkorchid")};
         box-shadow: 0 0 10px ${darken(0.05, "darkorchid")};
