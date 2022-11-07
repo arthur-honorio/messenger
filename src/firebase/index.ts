@@ -1,5 +1,11 @@
 import { initializeApp } from "firebase/app"
-import { getFirestore, setDoc, doc, updateDoc } from "firebase/firestore"
+import {
+    getFirestore,
+    setDoc,
+    doc,
+    updateDoc,
+    getDoc,
+} from "firebase/firestore"
 import {
     createUserWithEmailAndPassword,
     getAuth,
@@ -11,6 +17,7 @@ import {
     uploadBytesResumable,
     getDownloadURL,
 } from "firebase/storage"
+import { useLoggedUserStore } from "../states/loggedUser"
 
 const firebaseConfig = {
     apiKey: "AIzaSyBk8rE8nbIPFy-lhFsp9GV5NJyzmki-71Q",
@@ -49,14 +56,15 @@ export const uploadImage = (
 
 export const createDocument = async (
     collectionName: string,
-    dataToAdd: Object,
+    dataToAdd: { [key: string]: any },
     id: string
 ) => {
     try {
         const docRef = doc(db, collectionName, id)
         await setDoc(docRef, dataToAdd, { merge: true })
-    } catch (e: any) {
-        console.log(Object.entries(e))
+    } catch (err: any) {
+        console.log(err.message)
+        console.log(Object.entries(err))
     }
 }
 
@@ -68,46 +76,76 @@ export const updateDocument = async (
     try {
         const docRef = doc(db, collectionName, id)
         await updateDoc(docRef, dataToAdd)
-    } catch (e: any) {
-        console.log(Object.entries(e))
+    } catch (err: any) {
+        console.log(err.message)
+        console.log(Object.entries(err))
     }
 }
 
 export const signIn = async (email: string, password: string) => {
+    const { setLoggedUser } = useLoggedUserStore.getState()
     try {
         const signInResponse = await signInWithEmailAndPassword(
             auth,
             email,
             password
         )
-        if (signInResponse) {
-            auth?.currentUser?.uid &&
-                await updateDocument(
-                    "users",
-                    { status: "online" },
-                    auth.currentUser.uid
-                )
+        if (signInResponse && auth?.currentUser?.uid) {
+            await updateDocument(
+                "users",
+                { status: "online" },
+                auth.currentUser.uid
+            )
+            getDoc(doc(db, "users", auth.currentUser.uid)).then(response => {
+                if (response.data()) {
+                    const user = response.data()
+                    if (!!user) setLoggedUser(user)
+                }
+            })
+
             return signInResponse
         }
     } catch (err: any) {
         if (err.code === "auth/user-not-found") {
             return "user-not-found"
-        } else console.log(Object.entries(err))
+        } else {
+            console.log(err.message)
+            console.log(Object.entries(err))
+        }
     }
 }
 
-export const signUp = async (email: string, password: string) => {
-    let signUpResponse
+export const signUp = (email: string, password: string) => {
     try {
-        signUpResponse = await createUserWithEmailAndPassword(
-            auth,
-            email,
-            password
+        createUserWithEmailAndPassword(auth, email, password).then(
+            signUpResponse => {
+                if (signUpResponse) {
+                    const { setLoggedUser } = useLoggedUserStore.getState()
+                    const { displayName, photoURL, uid, email } =
+                        signUpResponse.user
+
+                    const dataObj = {
+                        displayName,
+                        photoURL,
+                        status: "online",
+                        uid,
+                        email,
+                        contacts: [],
+                    }
+                    createDocument("users", dataObj, signUpResponse?.user?.uid)
+                    getDoc(doc(db, "users", signUpResponse.user.uid)).then(
+                        response => {
+                            if (response.data()) {
+                                const user = response.data()
+                                if (!!user) setLoggedUser({ ...user })
+                            }
+                        }
+                    )
+                }
+            }
         )
-        if (signUpResponse) {
-            return signUpResponse
-        }
     } catch (err: any) {
+        console.log(err.message)
         console.log(Object.entries(err))
     }
 }
