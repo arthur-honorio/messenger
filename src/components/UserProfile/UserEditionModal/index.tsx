@@ -12,8 +12,9 @@ type UserEditionModalProps = {
 }
 
 type dataToAddType = {
-    displayName: string
+    displayName: string 
     photoURL: string | null
+    position: string 
 }
 
 export const UserEditionModal: React.FC<UserEditionModalProps> = ({
@@ -47,7 +48,7 @@ export const UserEditionModal: React.FC<UserEditionModalProps> = ({
 
     const handleSave = async (target: HTMLFormElement) => {
         const data = new FormData(target)
-        const { userName, file } = Object.fromEntries(data.entries())
+        const { userName, file, position } = Object.fromEntries(data.entries())
         const newFile = file as { name: string }
         console.log(newFile.name)
         if (newFile.name) {
@@ -57,6 +58,7 @@ export const UserEditionModal: React.FC<UserEditionModalProps> = ({
 
         let dataToAdd: dataToAddType = {} as dataToAddType
         if (userName) dataToAdd.displayName = userName.toString()
+        if (position) dataToAdd.position = position.toString()
         if (photoURL) dataToAdd.photoURL = photoURL
         awaitImage(dataToAdd)
     }
@@ -101,6 +103,11 @@ export const UserEditionModal: React.FC<UserEditionModalProps> = ({
                         placeholder="Nome de usuário"
                         type="text"
                         name="userName"
+                    />
+                    <input
+                        placeholder="Cargo"
+                        type="text"
+                        name="position"
                     />
                     <label
                         htmlFor="file_uploader"
