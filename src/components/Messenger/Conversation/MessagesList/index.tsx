@@ -8,7 +8,6 @@ type MessagesListProps = {
 }
 
 export const MessagesList: React.FC<MessagesListProps> = ({ messages }) => {
-    console.log(messages)
     return (
         <Container className="messages-list">
             <ul>

@@ -20,7 +20,6 @@ export const Conversation: React.FC<ConversationProps> = ({ messages }) => {
                 : 1
         }
     )
-    console.log(orderedMessages)
     return (
         <Container className="conversation">
             <MessagesHeader />
