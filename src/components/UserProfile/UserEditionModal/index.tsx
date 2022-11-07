@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react"
-import { getAuth, updateProfile } from "firebase/auth"
-import { useAuthState } from "react-firebase-hooks/auth"
-import { createDocument, uploadImage } from "../../../firebase"
+import { updateDocument, uploadImage } from "../../../firebase"
 
 import { ModalContainer } from "../../../style/modalStyle"
 import { IoCloseCircleSharp, IoImages } from "react-icons/io5"
+import { useLoggedUserStore } from "../../../states/loggedUser"
 
 type UserEditionModalProps = {
     show: boolean
@@ -12,36 +11,37 @@ type UserEditionModalProps = {
 }
 
 type dataToAddType = {
-    displayName: string 
+    displayName: string
     photoURL: string | null
-    position: string 
+    position: string
 }
 
 export const UserEditionModal: React.FC<UserEditionModalProps> = ({
     show,
     setShow,
 }) => {
-    const [user] = useAuthState(getAuth())
+    const { loggedUser, setLoggedUser } = useLoggedUserStore(state => state)
     const [hasToWaitImage, setHasToWaitImage] = useState(false)
     const [photoURL, setPhotoURL] = useState("")
 
     const awaitImage = (dataToAdd: dataToAddType) => {
         let timeout
-        if (user) {
+        if (loggedUser && loggedUser.email) {
             clearTimeout(timeout)
-            console.log("hasToWaitImage", hasToWaitImage, "photoURL", photoURL)
             if (hasToWaitImage && !!!photoURL) {
                 timeout = setTimeout(() => awaitImage(dataToAdd), 1000)
             } else {
-                updateProfile(user, dataToAdd)
-                    .then(async () => {
-                        createDocument("users", dataToAdd, user.uid).then(() =>
-                            setShow(false)
-                        )
-                    })
-                    .catch(error => {
-                        console.log(Object.entries(error))
-                    })
+                try {
+                    updateDocument(
+                        "users",
+                        dataToAdd,
+                        loggedUser.email.toString()
+                    )
+                    setLoggedUser({ ...loggedUser, ...dataToAdd })
+                } catch (err: any) {
+                    console.log(err.message)
+                    console.log(Object.entries(err))
+                }
             }
         }
     }
@@ -50,7 +50,6 @@ export const UserEditionModal: React.FC<UserEditionModalProps> = ({
         const data = new FormData(target)
         const { userName, file, position } = Object.fromEntries(data.entries())
         const newFile = file as { name: string }
-        console.log(newFile.name)
         if (newFile.name) {
             setHasToWaitImage(true)
             uploadImage(file, setPhotoURL)
@@ -67,7 +66,7 @@ export const UserEditionModal: React.FC<UserEditionModalProps> = ({
         const closeOnEsc = (e: KeyboardEvent) => {
             if (e.key === "Escape") {
                 setPhotoURL("")
-        setShow(false)
+                setShow(false)
                 cancelEdit()
             }
         }
@@ -104,15 +103,8 @@ export const UserEditionModal: React.FC<UserEditionModalProps> = ({
                         type="text"
                         name="userName"
                     />
-                    <input
-                        placeholder="Cargo"
-                        type="text"
-                        name="position"
-                    />
-                    <label
-                        htmlFor="file_uploader"
-                        className="fake-button"
-                    >
+                    <input placeholder="Cargo" type="text" name="position" />
+                    <label htmlFor="file_uploader" className="fake-button">
                         <span>Selecionar avatar</span>
                         <IoImages />
                     </label>
