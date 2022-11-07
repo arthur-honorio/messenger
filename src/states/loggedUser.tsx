@@ -1,22 +1,23 @@
+import { DocumentData } from "firebase/firestore"
 import create from "zustand"
-import { Auth, User } from "firebase/auth"
 
-type LoggedUser = {
-    auth: Auth | null
-    setAuth: (auth: Auth | null) => void
-    currentUser: User | null
-    setCurrentUser: (user: User | null) => void
-    img: string
-    position: string
+type user = {
+    displayName: string
+    photoURL: string | null
+    status: string
+    uid: string
+    email: string
+    contacts: user[]
+} | DocumentData
+
+type useLoggedUserStoreProps = {
+    loggedUser: user | null
+    setLoggedUser: (user: user) => void
 }
 
-export const useLoggedUserStore = create<LoggedUser>(set => {
+export const useLoggedUserStore = create<useLoggedUserStoreProps>(set => {
     return {
-        auth: null,
-        setAuth: auth => set(state => ({ auth })),
-        currentUser: null,
-        setCurrentUser: user => set(state => ({ currentUser: user })),
-        img: "",
-        position: "",
+        loggedUser: null,
+        setLoggedUser: user => set(state => ({ loggedUser: user })),
     }
 })
