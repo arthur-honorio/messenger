@@ -1,10 +1,14 @@
 import React, { useState } from "react"
 import { AddFile } from "./AddFile"
 import { IoAdd, IoMic, IoSendSharp } from "react-icons/io5"
-import { createDocument } from "../../../../firebase/firestoreFunctions"
+import {
+    createDocument,
+    getDocument,
+    updateDocument,
+} from "../../../../firebase/firestoreFunctions"
 import { useLoggedUserStore } from "../../../../states/loggedUser"
 import { useContactsStore } from "../../../../states/contacts"
-import { Timestamp } from "firebase/firestore"
+import { arrayUnion, Timestamp } from "firebase/firestore"
 
 import { Container } from "./style"
 
@@ -21,15 +25,52 @@ export const MessageInput: React.FC = () => {
     }
 
     function handleSendMessage() {
-        if (loggedUser && selectedContact)
-            createDocument("messages", {
-                content: message,
-                from: loggedUser.uid,
-                to: selectedContact.uid,
-                status: "sent",
-                type: "text",
-                created_at: Timestamp,
-            })
+        if (loggedUser && selectedContact) {
+            const chatId =
+                loggedUser.uid > selectedContact.uid
+                    ? loggedUser.uid + selectedContact.uid
+                    : selectedContact.uid + loggedUser.uid
+            const messages = getDocument("messages", chatId)
+            if (!messages)
+                createDocument(
+                    "messages",
+                    {
+                        conversation: [
+                            {
+                                content: message,
+                                status: "sent",
+                                type: "text",
+                                created_at: Timestamp,
+                            },
+                        ],
+                        lastMessage: {
+                            content: message.substring(0, 30),
+                            type: "text",
+                            created_at: Timestamp,
+                        },
+                    },
+                    chatId
+                )
+            else {
+                updateDocument(
+                    "messages",
+                    {
+                        conversation: arrayUnion({
+                            content: message,
+                            status: "sent",
+                            type: "text",
+                            created_at: Timestamp,
+                        }),
+                        lastMessage: {
+                            content: message.substring(0, 30),
+                            type: "text",
+                            created_at: Timestamp,
+                        },
+                    },
+                    chatId
+                )
+            }
+        }
     }
 
     return (
