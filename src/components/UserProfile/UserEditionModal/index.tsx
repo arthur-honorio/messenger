@@ -5,7 +5,7 @@ import { ModalContainer } from "../../../style/modalStyle"
 import { IoCloseCircleSharp, IoImages } from "react-icons/io5"
 import { useLoggedUserStore } from "../../../states/loggedUser"
 import { useSnackbarStore } from "../../../states/snackbar"
-import { uploadFiles } from "../../../firebase/uploadFiles"
+import { uploadFiles } from "../../../firebase/storageFunctions"
 
 type UserEditionModalProps = {
     show: boolean
