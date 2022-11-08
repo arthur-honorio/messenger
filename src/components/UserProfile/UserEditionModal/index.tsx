@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { updateDocument, uploadImage } from "../../../firebase"
+import { updateDocument } from "../../../firebase/firestoreFunctions"
 
 import { ModalContainer } from "../../../style/modalStyle"
 import { IoCloseCircleSharp, IoImages } from "react-icons/io5"

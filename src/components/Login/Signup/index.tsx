@@ -1,6 +1,6 @@
 import React from "react"
-import { signUp } from "../../../firebase"
 import { IoCloseCircleSharp } from "react-icons/io5"
+import { signUp } from "../../../firebase/authenticationFunctions"
 
 import { ModalContainer } from "../../../style/modalStyle"
 

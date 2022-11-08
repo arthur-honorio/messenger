@@ -1,6 +1,5 @@
 import React from "react"
-import { signIn } from "../../../firebase"
-import { useSnackbarStore } from "../../../states/snackbar"
+import { signIn } from "../../../firebase/authenticationFunctions"
 
 import { Container } from "./style"
 
@@ -19,20 +18,7 @@ export const ButtonsContainer: React.FC<ButtonsContainerProps> = ({
         let password = htmlElements[1]?.value
 
         if (email && password) {
-            const user = await signIn(email, password)
-            if (typeof user === "object") {
-                useSnackbarStore.setState({
-                    open: true,
-                    message: `Usuário logado: ${user.user.email}`,
-                    type: "success",
-                })
-            } else if (user === "user-not-found") {
-                useSnackbarStore.setState({
-                    open: true,
-                    message: "Usuário não existe",
-                    type: "warning",
-                })
-            }
+            await signIn(email, password)
         }
     }
 
@@ -44,7 +30,9 @@ export const ButtonsContainer: React.FC<ButtonsContainerProps> = ({
     return (
         <Container>
             <button onClick={handleLogInClick}>Entrar</button>
-            <button className="alt-button" onClick={handleSignUpClick}>Criar conta</button>
+            <button className="alt-button" onClick={handleSignUpClick}>
+                Criar conta
+            </button>
         </Container>
     )
 }
