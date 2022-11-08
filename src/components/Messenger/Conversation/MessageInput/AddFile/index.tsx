@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react"
 import { IoFileTray, IoImages } from "react-icons/io5"
-import { uploadFiles } from "../../../../../firebase/uploadFiles"
+import { uploadFiles } from "../../../../../firebase/storageFunctions"
 import { useSnackbarStore } from "../../../../../states/snackbar"
 
 import { Container } from "./style"

@@ -9,6 +9,7 @@ import { auth } from "./firebaseConfig"
 import {
     createDocument,
     documentRef,
+    getDocument,
     updateDocument,
 } from "./firestoreFunctions"
 const { setLoggedUser } = useLoggedUserStore.getState()
@@ -19,14 +20,17 @@ export const signIn = async (email: string, password: string) => {
             user: { uid },
         } = await signInWithEmailAndPassword(auth, email, password)
         await updateDocument("users", { status: "online" }, uid)
-        const docRef = await documentRef("users", uid)
-        const userData = await getDoc(docRef)
-        setLoggedUser({ userData: { ...userData.data(), status: "online" } })
-        useSnackbarStore.setState({
-            open: true,
-            message: `Usuário logado: ${email}`,
-            type: "success",
-        })
+        const userData = await getDocument("users", uid)
+        if (userData) {
+            setLoggedUser({
+                userData: { ...userData.data(), status: "online" },
+            })
+            useSnackbarStore.setState({
+                open: true,
+                message: `Usuário logado: ${email}`,
+                type: "success",
+            })
+        }
     } catch (err: any) {
         if (err.code === "auth/user-not-found") {
             useSnackbarStore.setState({
