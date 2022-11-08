@@ -4,6 +4,8 @@ import { updateDocument } from "../../../firebase/firestoreFunctions"
 import { ModalContainer } from "../../../style/modalStyle"
 import { IoCloseCircleSharp, IoImages } from "react-icons/io5"
 import { useLoggedUserStore } from "../../../states/loggedUser"
+import { useSnackbarStore } from "../../../states/snackbar"
+import { uploadFiles } from "../../../firebase/uploadFiles"
 
 type UserEditionModalProps = {
     show: boolean
@@ -22,15 +24,49 @@ export const UserEditionModal: React.FC<UserEditionModalProps> = ({
 }) => {
     const { loggedUser, setLoggedUser } = useLoggedUserStore(state => state)
     const [hasToWaitImage, setHasToWaitImage] = useState(false)
+    const [allowedToUpload, setAllowedToUpload] = useState(false)
     const [photoURL, setPhotoURL] = useState("")
 
-    const awaitImage = (dataToAdd: dataToAddType) => {
-        let timeout
-        if (loggedUser && loggedUser.email) {
-            clearTimeout(timeout)
-            if (hasToWaitImage && !!!photoURL) {
-                timeout = setTimeout(() => awaitImage(dataToAdd), 1000)
-            } else {
+    useEffect(() => {
+        if (hasToWaitImage && !!photoURL) {
+            setAllowedToUpload(true)
+        }
+    }, [photoURL, hasToWaitImage])
+
+    const getDataToAdd = (data: FormData): dataToAddType | undefined => {
+        if (data) {
+            const { userName, file, position } = Object.fromEntries(
+                data.entries()
+            )
+            const newFile = file as { name: string; size: number }
+            if (newFile.name) {
+                if (newFile.size > 1024 * 2) {
+                    useSnackbarStore.setState({
+                        open: true,
+                        message: "Imagem deve ter no máximo 2mb",
+                        type: "error",
+                    })
+                    return
+                }
+                setHasToWaitImage(true)
+                uploadFiles(file, setPhotoURL)
+            }
+
+            let dataToAdd: dataToAddType = {} as dataToAddType
+            if (userName) dataToAdd.displayName = userName.toString()
+            if (position) dataToAdd.position = position.toString()
+            if (photoURL) dataToAdd.photoURL = photoURL
+
+            return dataToAdd
+        }
+    }
+
+    const handleSave = async (target: HTMLFormElement) => {
+        const data = new FormData(target)
+        const dataToAdd = getDataToAdd(data)
+
+        if (allowedToUpload) {
+            if (loggedUser && loggedUser.email && dataToAdd)
                 try {
                     updateDocument(
                         "users",
@@ -41,25 +77,10 @@ export const UserEditionModal: React.FC<UserEditionModalProps> = ({
                 } catch (err: any) {
                     console.log(err.message)
                     console.log(Object.entries(err))
+                } finally {
+                    setAllowedToUpload(false)
                 }
-            }
         }
-    }
-
-    const handleSave = async (target: HTMLFormElement) => {
-        const data = new FormData(target)
-        const { userName, file, position } = Object.fromEntries(data.entries())
-        const newFile = file as { name: string }
-        if (newFile.name) {
-            setHasToWaitImage(true)
-            uploadImage(file, setPhotoURL)
-        }
-
-        let dataToAdd: dataToAddType = {} as dataToAddType
-        if (userName) dataToAdd.displayName = userName.toString()
-        if (position) dataToAdd.position = position.toString()
-        if (photoURL) dataToAdd.photoURL = photoURL
-        awaitImage(dataToAdd)
     }
 
     useEffect(() => {
