@@ -4,6 +4,10 @@ import { UserInfo } from "./UserInfo"
 import { FaPencilAlt, FaSignOutAlt } from "react-icons/fa"
 import { getAuth, signOut } from "firebase/auth"
 import { useSnackbarStore } from "../../states/snackbar"
+import { useAuthState } from "react-firebase-hooks/auth"
+import { UserEditionModal } from "./UserEditionModal"
+import { Tooltip } from "@mui/material"
+import { IoPersonAdd } from "react-icons/io5"
 
 import {
     Container,
@@ -11,8 +15,6 @@ import {
     UserProfileButton,
     UserProfileButtonsContainer,
 } from "./style"
-import { useAuthState } from "react-firebase-hooks/auth"
-import { UserEditionModal } from "./UserEditionModal"
 
 export type UserContainerProps = {
     isFromProfile: boolean
@@ -25,6 +27,7 @@ export const UserProfile: React.FC<UserContainerProps> = ({
 }) => {
     const [user] = useAuthState(getAuth())
     const [editUser, setEditUser] = useState(false)
+    const [addContact, setAddContact] = useState(false)
 
     const handleSignOut = async () => {
         signOut(getAuth()).then(e => {
@@ -55,23 +58,42 @@ export const UserProfile: React.FC<UserContainerProps> = ({
                 />
             </UserDetails>
             {isFromProfile ? (
-                <UserProfileButtonsContainer className="user-buttons">
-                    <UserEditionModal show={editUser} setShow={setEditUser} />
-                    <UserProfileButton
-                        className="user-edit"
-                        onClick={() => {
-                            setEditUser(true)
-                        }}
-                    >
-                        <FaPencilAlt />
-                    </UserProfileButton>
-                    <UserProfileButton
-                        className="user-signout"
-                        onClick={handleSignOut}
-                    >
-                        <FaSignOutAlt />
-                    </UserProfileButton>
-                </UserProfileButtonsContainer>
+                <>
+                    <Tooltip title="Adicionar contato">
+                        <UserProfileButton
+                            className="add-contacts"
+                            onClick={() => {
+                                setAddContact(true)
+                            }}
+                        >
+                            <IoPersonAdd />
+                        </UserProfileButton>
+                    </Tooltip>
+                    <UserProfileButtonsContainer className="user-buttons">
+                        <UserEditionModal
+                            show={editUser}
+                            setShow={setEditUser}
+                        />
+                        <Tooltip title="Editar usuário">
+                            <UserProfileButton
+                                className="user-edit"
+                                onClick={() => {
+                                    setEditUser(true)
+                                }}
+                            >
+                                <FaPencilAlt />
+                            </UserProfileButton>
+                        </Tooltip>
+                        <Tooltip title="Sair">
+                            <UserProfileButton
+                                className="user-signout"
+                                onClick={handleSignOut}
+                            >
+                                <FaSignOutAlt />
+                            </UserProfileButton>
+                        </Tooltip>
+                    </UserProfileButtonsContainer>
+                </>
             ) : (
                 <></>
             )}

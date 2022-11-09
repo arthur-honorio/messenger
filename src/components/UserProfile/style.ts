@@ -13,6 +13,26 @@ export const Container = styled.header<ContainerProps>`
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    .add-contacts,
+    .add-contacts svg {
+        color: orchid;
+        width: 60px;
+        height: 30px;
+    }
+
+    .add-contacts {
+        margin-left: 100px;
+    }
+
+    .add-contacts::after {
+        display: block;
+        content: "";
+        width: 2px;
+        height: 45px;
+        background-color: orchid;
+        align-self: center;
+    }
 `
 
 export const UserProfileButton = styled.div<EditButtonProps>`
@@ -33,7 +53,9 @@ export const UserDetails = styled.div`
     align-items: center;
     gap: 20px;
 `
+
 export const UserProfileButtonsContainer = styled.div`
     display: flex;
-    gap: 20px;
+    gap: 15px;
+    align-items: center;
 `
