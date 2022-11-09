@@ -7,7 +7,7 @@ import { useSnackbarStore } from "../../states/snackbar"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { UserEditionModal } from "./UserEditionModal"
 import { Tooltip } from "@mui/material"
-import { IoPersonAdd } from "react-icons/io5"
+import { AddContactModal } from "./AddContactModal"
 
 import {
     Container,
@@ -59,6 +59,10 @@ export const UserProfile: React.FC<UserContainerProps> = ({
             </UserDetails>
             {isFromProfile ? (
                 <>
+                    <AddContactModal
+                        show={addContact}
+                        setShow={setAddContact}
+                    />
                     <Tooltip title="Adicionar contato">
                         <UserProfileButton
                             className="add-contacts"
@@ -81,7 +85,7 @@ export const UserProfile: React.FC<UserContainerProps> = ({
                                     setEditUser(true)
                                 }}
                             >
-                                <FaPencilAlt />
+                                <IoPencilSharp />
                             </UserProfileButton>
                         </Tooltip>
                         <Tooltip title="Sair">
@@ -89,7 +93,7 @@ export const UserProfile: React.FC<UserContainerProps> = ({
                                 className="user-signout"
                                 onClick={handleSignOut}
                             >
-                                <FaSignOutAlt />
+                                <IoLogOut />
                             </UserProfileButton>
                         </Tooltip>
                     </UserProfileButtonsContainer>
