@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app"
 import { getAuth } from "firebase/auth"
 
 const firebaseConfig = {
-    apiKey: process.env.FIREBASE_API_KEY,
+    apiKey: "AIzaSyBk8rE8nbIPFy-lhFsp9GV5NJyzmki-71Q",
     authDomain: "rav-messenger.firebaseapp.com",
     projectId: "rav-messenger",
     storageBucket: "rav-messenger.appspot.com",
