@@ -1,6 +1,10 @@
 import React, { useEffect } from "react"
 import { arrayUnion } from "firebase/firestore"
-import { dbSearch, updateDocument } from "../../firebase/firestoreFunctions"
+import {
+    dbSearch,
+    getDocument,
+    updateDocument,
+} from "../../firebase/firestoreFunctions"
 import { useLoggedUserStore, userProps } from "../../states/loggedUser"
 import { useSnackbarStore } from "../../states/snackbar"
 
@@ -22,40 +26,43 @@ export const AddContactModal: React.FC<AddContactModalProps> = ({
         const data = new FormData(target)
         const { email } = Object.fromEntries(data.entries())
 
-        if (loggedUser && email.toString() !== loggedUser.email) {
-            const result = await dbSearch("users", "email", email.toString())
-            const contactToAdd = !result.empty && result.docs[0].data()
-
-            if (contactToAdd) {
-                updateDocument(
+        if (loggedUser)
+            if (email.toString() !== loggedUser.email) {
+                const result = await dbSearch(
                     "users",
-                    { contacts: arrayUnion(contactToAdd.eui) },
-                    loggedUser.uid
-                ).then(() => {
-                    setLoggedUser((state: userProps) => ({
-                        ...state,
-                        contacts: [...state.contacts, contactToAdd.eui],
-                    }))
+                    "email",
+                    email.toString()
+                )
+                const contactToAdd = !result.empty && result.docs[0].data()
+                if (contactToAdd) {
+                    updateDocument(
+                        "users",
+                        { contacts: arrayUnion(contactToAdd.uid) },
+                        loggedUser.uid
+                    ).then(async () => {
+                        const user = await getDocument("users", loggedUser.uid)
+                        console.log(user)
+                        user && setLoggedUser(user)
+                        useSnackbarStore.setState({
+                            open: true,
+                            message: "Contato adicionado com sucesso",
+                            type: "success",
+                        })
+                    })
+                } else {
                     useSnackbarStore.setState({
                         open: true,
-                        message: "Contato adicionado com sucesso",
-                        type: "success",
+                        message: "O e-mail informado não está cadastrado",
+                        type: "warning",
                     })
-                })
+                }
             } else {
                 useSnackbarStore.setState({
                     open: true,
-                    message: "O e-mail informado não está cadastrado",
-                    type: "warning",
+                    message: "O e-mail informado é o e-mail do usuário logado",
+                    type: "error",
                 })
             }
-        } else {
-            useSnackbarStore.setState({
-                open: true,
-                message: "O e-mail informado é o e-mail do usuário logado",
-                type: "error",
-            })
-        }
     }
 
     useEffect(() => {
