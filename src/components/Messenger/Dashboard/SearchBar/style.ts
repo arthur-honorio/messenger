@@ -10,6 +10,7 @@ export const Container = styled.div`
     svg {
         position: absolute;
         left: 88%;
+        cursor: pointer;
     }
 
     input {
@@ -20,5 +21,7 @@ export const Container = styled.div`
         padding: 10px;
         padding-left: 25px;
         border-radius: 40px;
+        padding-right: 70px;
+        text-align: left;
     }
 `
