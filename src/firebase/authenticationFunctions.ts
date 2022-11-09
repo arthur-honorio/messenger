@@ -16,15 +16,14 @@ const { setLoggedUser } = useLoggedUserStore.getState()
 
 export const signIn = async (email: string, password: string) => {
     try {
+        setLoggedUser(null)
         const {
             user: { uid },
         } = await signInWithEmailAndPassword(auth, email, password)
         await updateDocument("users", { status: "online" }, uid)
         const userData = await getDocument("users", uid)
         if (userData) {
-            setLoggedUser({
-                userData: { ...userData.data(), status: "online" },
-            })
+            setLoggedUser({ ...userData, status: "online" })
             useSnackbarStore.setState({
                 open: true,
                 message: `Usuário logado: ${email}`,
