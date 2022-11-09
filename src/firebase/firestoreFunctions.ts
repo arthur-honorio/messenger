@@ -53,6 +53,7 @@ export const updateDocument = async (
         const docRef = doc(db, collectionName, id)
         await updateDoc(docRef, dataToAdd)
     } catch (err: any) {
+        console.log(err)
         console.log(err.message)
         console.log(Object.entries(err))
     }
