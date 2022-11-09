@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import { UserImageAndStatus } from "./UserImageAndStatus"
 import { UserInfo } from "./UserInfo"
-import { FaPencilAlt, FaSignOutAlt } from "react-icons/fa"
 import { getAuth, signOut } from "firebase/auth"
 import { useSnackbarStore } from "../../states/snackbar"
 import { useAuthState } from "react-firebase-hooks/auth"
@@ -9,6 +8,7 @@ import { UserEditionModal } from "./UserEditionModal"
 import { Tooltip } from "@mui/material"
 import { AddContactModal } from "./AddContactModal"
 
+import { IoPersonAdd, IoPencilSharp, IoLogOut } from "react-icons/io5"
 import {
     Container,
     UserDetails,

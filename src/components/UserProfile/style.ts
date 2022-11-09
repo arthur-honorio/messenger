@@ -39,11 +39,12 @@ export const UserProfileButton = styled.div<EditButtonProps>`
     display: flex;
     justify-content: center;
     gap: 10px;
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
 
     svg {
         cursor: pointer;
+        font-size: 25px;
     }
 `
 
