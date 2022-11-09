@@ -108,6 +108,13 @@ export const UserEditionModal: React.FC<UserEditionModalProps> = ({
         setShow(false)
     }
 
+    const handleCancelEdit = () => {
+        setShow(false)
+        setHasToWaitImage(false)
+        setAllowedToUpload(false)
+        setPhotoURL("")
+    }
+
     if (show) {
         return (
             <ModalContainer>
@@ -142,7 +149,7 @@ export const UserEditionModal: React.FC<UserEditionModalProps> = ({
                         <button
                             className="alt-button"
                             type="button"
-                            onClick={() => {}}
+                            onClick={() => handleCancelEdit()}
                         >
                             Cancelar
                         </button>
