@@ -13,11 +13,7 @@ type ConversationProps = {
 export const Conversation: React.FC<ConversationProps> = ({ messages }) => {
     const orderedMessages: MessageProps[] = messages.sort(
         (a: MessageProps, b: MessageProps) => {
-            return a.created_at > b.created_at
-                ? -1
-                : a.created_at === b.created_at
-                ? 0
-                : 1
+            return a.created_at > b.created_at ? -1 : 1
         }
     )
     return (
