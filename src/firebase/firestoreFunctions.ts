@@ -4,6 +4,10 @@ import {
     doc,
     updateDoc,
     getDoc,
+    collection,
+    query,
+    where,
+    getDocs,
 } from "firebase/firestore"
 import { app } from "./firebaseConfig"
 
@@ -52,4 +56,14 @@ export const updateDocument = async (
         console.log(err.message)
         console.log(Object.entries(err))
     }
+}
+
+export const dbSearch = async (
+    collectionName: string,
+    property: string,
+    desiredAnswer: string,
+) => {
+    const ref = collection(db, collectionName)
+    const q = query(ref, where(property, "==", desiredAnswer))
+    return await getDocs(q)
 }
