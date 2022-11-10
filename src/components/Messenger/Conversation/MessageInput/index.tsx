@@ -9,7 +9,7 @@ import {
 import { useLoggedUserStore } from "../../../../states/loggedUser"
 import { useContactsStore } from "../../../../states/contacts"
 import { arrayUnion, Timestamp } from "firebase/firestore"
-
+import { nanoid } from "nanoid"
 import { Container } from "./style"
 
 export const MessageInput: React.FC = () => {
@@ -24,13 +24,13 @@ export const MessageInput: React.FC = () => {
         setShowAddFile(showAddFile)
     }
 
-    function handleSendMessage() {
+    const handleSendMessage = async () => {
         if (loggedUser && selectedContact) {
             const chatId =
                 loggedUser.uid > selectedContact.uid
                     ? loggedUser.uid + selectedContact.uid
                     : selectedContact.uid + loggedUser.uid
-            const messages = getDocument("messages", chatId)
+            const messages = await getDocument("messages", chatId)
             if (!messages)
                 createDocument(
                     "messages",
@@ -38,6 +38,7 @@ export const MessageInput: React.FC = () => {
                         conversation: [
                             {
                                 content: message,
+                                uid: nanoid(),
                                 status: "sent",
                                 type: "text",
                                 created_at: Timestamp,
@@ -56,6 +57,7 @@ export const MessageInput: React.FC = () => {
                     "messages",
                     {
                         conversation: arrayUnion({
+                            uid: nanoid(),
                             content: message,
                             status: "sent",
                             type: "text",
