@@ -1,5 +1,6 @@
-import React from "react"
+import React, { useState } from "react"
 import { signIn } from "../../../firebase/authenticationFunctions"
+import { ActionButton } from "../../ActionButton"
 
 import { Container } from "./style"
 
@@ -10,6 +11,18 @@ type ButtonsContainerProps = {
 export const ButtonsContainer: React.FC<ButtonsContainerProps> = ({
     setShowSignUp,
 }) => {
+    const [isLoading, setISLoading] = useState(false)
+    const [loadingSuccedded, setLoadingSuccedded] = useState(false)
+
+    const startLoadingCallback = () => {
+        setISLoading(true)
+    }
+
+    const conclusionCallback = (success: boolean): void => {
+        setISLoading(false)
+        success && setLoadingSuccedded(true)
+    }
+
     const handleLogInClick = async (event: React.MouseEvent) => {
         event.preventDefault()
         let htmlElements: HTMLCollectionOf<HTMLInputElement> =
@@ -18,7 +31,12 @@ export const ButtonsContainer: React.FC<ButtonsContainerProps> = ({
         let password = htmlElements[1]?.value
 
         if (email && password) {
-            await signIn(email, password)
+            await signIn(
+                email,
+                password,
+                conclusionCallback,
+                startLoadingCallback
+            )
         }
     }
 
@@ -29,7 +47,12 @@ export const ButtonsContainer: React.FC<ButtonsContainerProps> = ({
 
     return (
         <Container>
-            <button onClick={handleLogInClick}>Entrar</button>
+            <ActionButton
+                isLoading={isLoading}
+                loadingSuccedded={loadingSuccedded}
+                handleClick={handleLogInClick}
+                buttonContent="Entrar"
+            />
             <button className="alt-button" onClick={handleSignUpClick}>
                 Criar conta
             </button>

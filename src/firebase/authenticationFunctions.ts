@@ -2,34 +2,42 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
 } from "firebase/auth"
-import { getDoc } from "firebase/firestore"
 import { useLoggedUserStore } from "../states/loggedUser"
 import { useSnackbarStore } from "../states/snackbar"
 import { auth } from "./firebaseConfig"
 import {
     createDocument,
-    documentRef,
     getDocument,
     updateDocument,
 } from "./firestoreFunctions"
 const { setLoggedUser } = useLoggedUserStore.getState()
 
-export const signIn = async (email: string, password: string) => {
+export const signIn = async (
+    email: string,
+    password: string,
+    conclusionCallback?: (arg: boolean) => void,
+    startCallback?: () => void
+) => {
     try {
+        startCallback && startCallback()
         setLoggedUser(null)
         const {
             user: { uid },
         } = await signInWithEmailAndPassword(auth, email, password)
         await updateDocument("users", { status: "online" }, uid)
-        const userData = await getDocument("users", uid)
-        if (userData) {
-            setLoggedUser({ ...userData, status: "online" })
-            useSnackbarStore.setState({
-                open: true,
-                message: `Usuário logado: ${email}`,
-                type: "success",
-            })
-        }
+        getDocument("users", uid).then(userData => {
+            if (userData) {
+                conclusionCallback && conclusionCallback(true)
+                setTimeout(() => {
+                    setLoggedUser({ ...userData, status: "online" })
+                    useSnackbarStore.setState({
+                        open: true,
+                        message: `Usuário logado: ${email}`,
+                        type: "success",
+                    })
+                }, 1000)
+            }
+        })
     } catch (err: any) {
         if (err.code === "auth/user-not-found") {
             useSnackbarStore.setState({
@@ -41,6 +49,7 @@ export const signIn = async (email: string, password: string) => {
             console.log(err.message)
             console.log(Object.entries(err))
         }
+        conclusionCallback && conclusionCallback(false)
     }
 }
 
