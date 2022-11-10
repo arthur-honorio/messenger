@@ -4,15 +4,14 @@ import { Login } from "../Login"
 import { Conversation } from "./Conversation"
 import { Dashboard } from "./Dashboard"
 import { Container } from "./style"
-import { useAuthState } from "react-firebase-hooks/auth"
-import { getAuth } from "firebase/auth"
 import { useContactsStore } from "../../states/contacts"
 import { NoChatSelected } from "./Conversation/NoChatSelected"
+import { useLoggedUserStore } from "../../states/loggedUser"
 
 export const Messenger: React.FC = () => {
-    const [user] = useAuthState(getAuth())
+    const { loggedUser } = useLoggedUserStore(state => state)
     const { selectedContact, contacts } = useContactsStore.getState()
-    if (user) {
+    if (loggedUser) {
         return (
             <Container className="messenger">
                 <Dashboard />

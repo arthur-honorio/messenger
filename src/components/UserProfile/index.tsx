@@ -3,7 +3,6 @@ import { UserImageAndStatus } from "./UserImageAndStatus"
 import { UserInfo } from "./UserInfo"
 import { getAuth, signOut } from "firebase/auth"
 import { useSnackbarStore } from "../../states/snackbar"
-import { useAuthState } from "react-firebase-hooks/auth"
 import { UserEditionModal } from "./UserEditionModal"
 import { Tooltip } from "@mui/material"
 import { AddContactModal } from "./AddContactModal"
@@ -15,6 +14,8 @@ import {
     UserProfileButton,
     UserProfileButtonsContainer,
 } from "./style"
+import { useLoggedUserStore } from "../../states/loggedUser"
+import { updateDocument } from "../../firebase/firestoreFunctions"
 
 export type UserContainerProps = {
     isFromProfile: boolean
@@ -25,12 +26,16 @@ export const UserProfile: React.FC<UserContainerProps> = ({
     isFromProfile,
     imgSize,
 }) => {
-    const [user] = useAuthState(getAuth())
+    const { loggedUser } = useLoggedUserStore(state => state)
     const [editUser, setEditUser] = useState(false)
     const [addContact, setAddContact] = useState(false)
+    const { setLoggedUser } = useLoggedUserStore(state => state)
 
     const handleSignOut = async () => {
-        signOut(getAuth()).then(e => {
+        signOut(getAuth()).then(() => {
+            setLoggedUser(null)
+            loggedUser &&
+                updateDocument("users", { status: " offline" }, loggedUser.uid)
             useSnackbarStore.setState({
                 open: true,
                 message: "Usuário deslogado com sucesso",
@@ -45,14 +50,14 @@ export const UserProfile: React.FC<UserContainerProps> = ({
                 <UserImageAndStatus
                     imageSize={imgSize}
                     user={{
-                        name: user?.displayName || undefined,
-                        imageSrc: user?.photoURL || undefined,
+                        name: loggedUser?.displayName || undefined,
+                        imageSrc: loggedUser?.photoURL || undefined,
                         status: "online",
                     }}
                 />
                 <UserInfo
                     user={{
-                        name: user?.displayName || undefined,
+                        name: loggedUser?.displayName || undefined,
                         position: "Frontend",
                     }}
                 />
