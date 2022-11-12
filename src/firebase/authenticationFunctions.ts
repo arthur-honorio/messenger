@@ -12,11 +12,20 @@ import {
 } from "./firestoreFunctions"
 const { setLoggedUser } = useLoggedUserStore.getState()
 
-export const signIn = async (
-    email: string,
-    password: string,
-    conclusionCallback?: (arg: boolean) => void,
-    startCallback?: () => void
+type signInProps = {
+    (
+        email: string,
+        password: string,
+        conclusionCallback?: (arg: boolean) => void,
+        startCallback?: () => void
+    ): void
+}
+
+export const signIn: signInProps = async (
+    email,
+    password,
+    conclusionCallback,
+    startCallback
 ) => {
     try {
         startCallback && startCallback()

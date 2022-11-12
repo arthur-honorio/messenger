@@ -31,7 +31,7 @@ export const ButtonsContainer: React.FC<ButtonsContainerProps> = ({
         let password = htmlElements[1]?.value
 
         if (email && password) {
-            await signIn(
+            signIn(
                 email,
                 password,
                 conclusionCallback,
