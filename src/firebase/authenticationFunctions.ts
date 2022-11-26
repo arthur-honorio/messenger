@@ -21,6 +21,16 @@ type signInProps = {
     ): void
 }
 
+type signUpProps = {
+    (
+        email: string,
+        password: string,
+        photoURL: string,
+        displayName: string,
+        position: string
+    ): Promise<void>
+}
+
 export const signIn: signInProps = async (
     email,
     password,
@@ -62,22 +72,31 @@ export const signIn: signInProps = async (
     }
 }
 
-export const signUp = async (email: string, password: string) => {
+export const signUp: signUpProps = async (
+    email,
+    password,
+    photoURL,
+    displayName,
+    position
+) => {
     try {
-        const {
-            user: { email: emailFromCredential, uid },
-        } = await createUserWithEmailAndPassword(auth, email, password)
-        const userData = {
-            email: emailFromCredential,
-            displayName: "",
-            photoURL: "",
-            uid,
-            status: "online",
-            contacts: [],
-        }
-        createDocument("users", userData, uid)
-        setLoggedUser({ userData })
+        await createUserWithEmailAndPassword(auth, email, password).then(
+            credential => {
+                const userData = {
+                    uid: credential.user.uid,
+                    email: credential.user.email,
+                    displayName,
+                    photoURL,
+                    position,
+                    status: "online",
+                    contacts: [],
+                }
+                createDocument("users", userData, credential.user.uid)
+                setLoggedUser({ userData })
+            }
+        )
     } catch (err: any) {
+        console.log(err)
         console.log(err.message)
         console.log(Object.entries(err))
     }

@@ -3,7 +3,7 @@ import { UserImageAndStatus } from "./UserImageAndStatus"
 import { UserInfo } from "./UserInfo"
 import { getAuth, signOut } from "firebase/auth"
 import { useSnackbarStore } from "../../states/snackbar"
-import { UserEditionModal } from "./UserEditionModal"
+import { UserEdition } from "./UserEditionModal"
 import { Tooltip } from "@mui/material"
 import { AddContactModal } from "./AddContactModal"
 
@@ -79,7 +79,7 @@ export const UserProfile: React.FC<UserContainerProps> = ({
                         </UserProfileButton>
                     </Tooltip>
                     <UserProfileButtonsContainer className="user-buttons">
-                        <UserEditionModal
+                        <UserEdition
                             show={editUser}
                             setShow={setEditUser}
                         />

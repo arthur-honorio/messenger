@@ -22,7 +22,7 @@ export default createGlobalStyle`
         border-radius: 10px;
         background: darkcyan;
         width: 600px;
-        height: 300px;
+        height: fit-content;
         display: flex;
         flex-direction: column;
         align-items: center;

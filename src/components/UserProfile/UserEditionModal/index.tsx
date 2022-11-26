@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react"
 import { updateDocument } from "../../../firebase/firestoreFunctions"
-
-import { ModalContainer } from "../../../style/modalStyle"
-import { IoCloseCircleSharp, IoImages } from "react-icons/io5"
 import { useLoggedUserStore } from "../../../states/loggedUser"
-import { useSnackbarStore } from "../../../states/snackbar"
 import { uploadFiles } from "../../../firebase/storageFunctions"
+import { UserForm } from "../UserForm"
 
 type UserEditionModalProps = {
     show: boolean
@@ -14,47 +11,41 @@ type UserEditionModalProps = {
 
 type dataToAddType = {
     displayName: string
-    photoURL: string | null
-    position: string
+    position?: string
+    photoURL?: string
+    email?: string
+    password?: string
 }
 
-export const UserEditionModal: React.FC<UserEditionModalProps> = ({
+export const UserEdition: React.FC<UserEditionModalProps> = ({
     show,
     setShow,
 }) => {
     const { loggedUser, setLoggedUser } = useLoggedUserStore(state => state)
-    const [hasToWaitImage, setHasToWaitImage] = useState(false)
     const [allowedToUpload, setAllowedToUpload] = useState(false)
+    const [formData, setFormData] = useState<HTMLFormElement | null>(null)
     const [photoURL, setPhotoURL] = useState("")
 
     useEffect(() => {
-        if (hasToWaitImage && !!photoURL) {
-            setAllowedToUpload(true)
-        }
-    }, [photoURL, hasToWaitImage])
+        if (formData) handleSave(formData)
+    }, [formData])
 
-    const getDataToAdd = (data: FormData): dataToAddType | undefined => {
+    const getDataToAdd = async (
+        data: FormData
+    ): Promise<dataToAddType | undefined> => {
         if (data) {
-            const { userName, file, position } = Object.fromEntries(
+            const { userName, file, position, email } = Object.fromEntries(
                 data.entries()
             )
-            const newFile = file as { name: string; size: number }
-            if (newFile.name) {
-                if (newFile.size > 1024 * 2) {
-                    useSnackbarStore.setState({
-                        open: true,
-                        message: "Imagem deve ter no máximo 2mb",
-                        type: "error",
-                    })
-                    return
-                }
-                setHasToWaitImage(true)
-                uploadFiles(file, setPhotoURL)
+
+            if (file) {
+                await uploadFiles(file, setPhotoURL)
             }
 
             let dataToAdd: dataToAddType = {} as dataToAddType
             if (userName) dataToAdd.displayName = userName.toString()
             if (position) dataToAdd.position = position.toString()
+            if (email) dataToAdd.email = email.toString()
             if (photoURL) dataToAdd.photoURL = photoURL
 
             return dataToAdd
@@ -63,7 +54,7 @@ export const UserEditionModal: React.FC<UserEditionModalProps> = ({
 
     const handleSave = async (target: HTMLFormElement) => {
         const data = new FormData(target)
-        const dataToAdd = getDataToAdd(data)
+        const dataToAdd = await getDataToAdd(data)
 
         if (allowedToUpload) {
             if (loggedUser && loggedUser.email && dataToAdd)
@@ -88,7 +79,7 @@ export const UserEditionModal: React.FC<UserEditionModalProps> = ({
             if (e.key === "Escape") {
                 setPhotoURL("")
                 setShow(false)
-                cancelEdit()
+                setFormData(null)
             }
         }
 
@@ -98,64 +89,13 @@ export const UserEditionModal: React.FC<UserEditionModalProps> = ({
 
         return () => {
             setPhotoURL("")
-            setHasToWaitImage(false)
             window.removeEventListener("keydown", closeOnEsc)
         }
     }, [show])
 
-    const cancelEdit = () => {
-        setPhotoURL("")
-        setShow(false)
-    }
-
-    const handleCancelEdit = () => {
-        setShow(false)
-        setHasToWaitImage(false)
-        setAllowedToUpload(false)
-        setPhotoURL("")
-    }
-
     if (show) {
         return (
-            <ModalContainer>
-                <form
-                    onSubmit={event => {
-                        event?.preventDefault()
-                        handleSave(event.target as HTMLFormElement)
-                    }}
-                >
-                    <h2>Editar usuário</h2>
-                    <IoCloseCircleSharp onClick={() => setShow(false)} />
-                    <input
-                        placeholder="Nome de usuário"
-                        type="text"
-                        name="userName"
-                    />
-                    <input placeholder="Cargo" type="text" name="position" />
-                    <label htmlFor="file_uploader" className="fake-button">
-                        <span>Selecionar avatar</span>
-                        <IoImages />
-                    </label>
-                    <input
-                        hidden
-                        id="file_uploader"
-                        accept="image/*"
-                        placeholder="Imagem de avatar"
-                        type="file"
-                        name="file"
-                    />
-                    <footer>
-                        <button type="submit">Salvar</button>
-                        <button
-                            className="alt-button"
-                            type="button"
-                            onClick={() => handleCancelEdit()}
-                        >
-                            Cancelar
-                        </button>
-                    </footer>
-                </form>
-            </ModalContainer>
+            <UserForm setFormData={setFormData} isEdition setShow={setShow} />
         )
     } else {
         return <></>

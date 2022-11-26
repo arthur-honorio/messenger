@@ -1,44 +1,28 @@
-import React from "react"
-import { IoCloseCircleSharp } from "react-icons/io5"
+import React, { useEffect, useState } from "react"
 import { signUp } from "../../../firebase/authenticationFunctions"
-
-import { ModalContainer } from "../../../style/modalStyle"
+import { UserForm } from "../../UserProfile/UserForm"
 
 type signUpProps = {
     setShowSignUp: (arg0: boolean) => void
 }
 
 export const SignUp: React.FC<signUpProps> = ({ setShowSignUp }) => {
-    async function handleSave(event: HTMLFormElement) {
-        const data = new FormData(event)
-        const { email, password } = Object.fromEntries(data.entries())
-        signUp(email.toString(), password.toString())
-    }
+    const [formData, setFormData] = useState<HTMLFormElement | null>(null)
 
-    return (
-        <ModalContainer className="signUp">
-            <form
-                onSubmit={event => {
-                    event.preventDefault()
-                    handleSave(event.target as HTMLFormElement)
-                }}
-            >
-                <h2>Criar Conta</h2>
-                <IoCloseCircleSharp onClick={() => setShowSignUp(false)} />
-                <input
-                    name="email"
-                    type="email"
-                    required
-                    placeholder="E-mail"
-                />
-                <input
-                    name="password"
-                    type="password"
-                    required
-                    placeholder="Senha"
-                />
-                <button type="submit">Criar Conta</button>
-            </form>
-        </ModalContainer>
-    )
+    useEffect(() => {
+        if (formData) {
+            const { email, password, photoURL, displayName, position } =
+                Object.fromEntries(formData.entries())
+
+            signUp(
+                email.toString(),
+                password.toString(),
+                photoURL.toString(),
+                displayName.toString(),
+                position.toString()
+            )
+        }
+    }, [formData])
+
+    return <UserForm setShow={setShowSignUp} setFormData={setFormData} />
 }
