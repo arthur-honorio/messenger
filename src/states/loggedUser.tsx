@@ -8,9 +8,15 @@ export type userProps =
           status: string
           uid: string
           email: string
-          contacts?: userProps[]
+          contacts?: contactProps[]
       }
     | DocumentData
+
+export type contactProps = {
+    uid: string
+    displayName: string
+    photoURL: string
+}
 
 type useLoggedUserStoreProps = {
     loggedUser: userProps | null
