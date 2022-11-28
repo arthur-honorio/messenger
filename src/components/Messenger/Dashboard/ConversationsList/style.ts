@@ -5,7 +5,7 @@ type ContainerProps = {
     children: React.ReactNode
 }
 
-export const Container = styled.div<ContainerProps>`
+export const Container = styled.li<ContainerProps>`
     width: 100%;
     height: 100%;
 `
