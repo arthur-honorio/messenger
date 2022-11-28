@@ -8,6 +8,8 @@ import {
     query,
     where,
     getDocs,
+    onSnapshot,
+    DocumentData,
 } from "firebase/firestore"
 import { app } from "./firebaseConfig"
 
@@ -26,6 +28,17 @@ export const getDocument = async (collection: string, id: string) => {
         console.log(err.message)
         console.log(Object.entries(err))
     }
+}
+
+export const getRealtimeData = (
+    callback: (data: DocumentData) => void,
+    collection: string,
+    uid: string
+) => {
+    onSnapshot(doc(db, collection, uid), doc => {
+        const data = doc.data()
+        if (data && Object.keys(data).length) callback(data)
+    })
 }
 
 export const createDocument = async (
@@ -62,7 +75,7 @@ export const updateDocument = async (
 export const dbSearch = async (
     collectionName: string,
     property: string,
-    desiredAnswer: string,
+    desiredAnswer: string
 ) => {
     const ref = collection(db, collectionName)
     const q = query(ref, where(property, "==", desiredAnswer))
