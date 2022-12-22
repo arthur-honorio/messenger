@@ -1,13 +1,15 @@
 import React from "react"
 import { IoCloseCircleSharp, IoImages } from "react-icons/io5"
 import { UserFormPropsType } from "../../types/types"
+import { useLoggedUserStore } from "../../states/loggedUser"
+
 import { ModalContainer } from "../../style/modalStyle"
 
 export const UserForm: React.FC<UserFormPropsType> = ({
     setFormData,
-    isEdition,
     setShow,
 }) => {
+    const { loggedUser } = useLoggedUserStore(state => state)
     const handleCancel = () => {
         setFormData(null)
         setShow(false)
@@ -22,7 +24,7 @@ export const UserForm: React.FC<UserFormPropsType> = ({
             >
                 <h2>Editar usuário</h2>
                 <IoCloseCircleSharp onClick={handleCancel} />
-                {!isEdition ? (
+                {!loggedUser ? (
                     <>
                         <input
                             placeholder="E-mail"

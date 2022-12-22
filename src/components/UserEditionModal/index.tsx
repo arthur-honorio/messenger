@@ -94,9 +94,7 @@ export const UserEdition: React.FC<UserEditionModalProps> = ({
     }, [show])
 
     if (show) {
-        return (
-            <UserForm setFormData={setFormData} isEdition setShow={setShow} />
-        )
+        return <UserForm setFormData={setFormData} setShow={setShow} />
     } else {
         return <></>
     }
