@@ -3,7 +3,7 @@ import { IoImage, IoPlayBackCircle } from "react-icons/io5"
 import { useContactsStore } from "../../states/contacts"
 import { useLoggedUserStore } from "../../states/loggedUser"
 import { contactPropsTypes } from "../../types/types"
-import { UserImageAndStatus } from "../UserProfile/UserImageAndStatus"
+import { UserImageAndStatus } from "../UserImageAndStatus"
 
 import { Container } from "./style"
 
