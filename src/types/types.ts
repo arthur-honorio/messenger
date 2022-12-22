@@ -10,7 +10,8 @@ export type userPropsTypes =
     | {
           displayName: string
           photoURL: string | null
-          status: string
+          position?: string | null
+          status?: string
           uid: string
           email: string
           contacts?: contactPropsTypes[]

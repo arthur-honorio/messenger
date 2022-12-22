@@ -41,7 +41,6 @@ export default createGlobalStyle`
         }
 
         footer {
-            margin-top: 10px;
             display: flex;
             width: 100%;
             gap: 10px;
@@ -73,7 +72,7 @@ export default createGlobalStyle`
     label.fake-button {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 3px;
         width: 100%;
         justify-content: center;
     }

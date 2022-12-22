@@ -22,7 +22,7 @@ export const UserForm: React.FC<UserFormPropsType> = ({
                     setFormData(event.target as HTMLFormElement)
                 }}
             >
-                <h2>Editar usuário</h2>
+                <h2>{`${loggedUser ? "Editar usuário" : "Criar conta"}`}</h2>
                 <IoCloseCircleSharp onClick={handleCancel} />
                 {!loggedUser ? (
                     <>
@@ -32,40 +32,66 @@ export const UserForm: React.FC<UserFormPropsType> = ({
                             name="email"
                             required
                         />
-                        <input
-                            placeholder="Criar senha"
-                            type="password"
-                            name="password"
-                            required
-                        />
+                        <div className="password">
+                            <input
+                                placeholder="Criar senha"
+                                type="password"
+                                name="password"
+                                required
+                            />
+                            <input
+                                placeholder="Repetir senha"
+                                type="password"
+                                name="retypePassword"
+                                required
+                            />
+                        </div>
+                        <hr />
                     </>
                 ) : (
                     <></>
                 )}
-                <input
-                    placeholder="Nome"
-                    type="text"
-                    name="displayName"
-                    required
-                />
-                <input
-                    placeholder="Cargo"
-                    type="text"
-                    name="position"
-                    required
-                />
-                <label htmlFor="file_uploader" className="fake-button">
-                    <span>Selecionar avatar</span>
-                    <IoImages />
-                </label>
-                <input
-                    hidden
-                    id="file_uploader"
-                    accept="image/*"
-                    placeholder="Imagem de avatar"
-                    type="file"
-                    name="file"
-                />
+                <div className="name-position-avatar">
+                    <div className="name-position">
+                        <input
+                            placeholder={`${
+                                loggedUser
+                                    ? loggedUser?.displayName
+                                    : "Nome de usuário"
+                            }`}
+                            type="text"
+                            name="displayName"
+                            required
+                        />
+                        <input
+                            placeholder={`${loggedUser?.position || "Cargo"}`}
+                            type="text"
+                            name="position"
+                            required
+                        />
+                    </div>
+                    <label htmlFor="file_uploader" className="fake-button">
+                        {loggedUser?.photoURL ? (
+                            <img
+                                src={loggedUser.photoURL}
+                                alt="Foto do usuário"
+                            />
+                        ) : (
+                            <>
+                                + <IoImages />
+                            </>
+                        )}
+                    </label>
+                    <input
+                        hidden
+                        id="file_uploader"
+                        accept="image/*"
+                        placeholder="Imagem de avatar"
+                        type="file"
+                        name="file"
+                    />
+                </div>
+                <hr />
                 <footer>
                     <button type="submit">Salvar</button>
                     <button
