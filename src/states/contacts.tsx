@@ -1,22 +1,10 @@
 import create from "zustand"
+import { contactPropsTypes, contactsStorePropsTypes } from "../types/types"
 
-type contactsStoreProps = {
-    contacts: contactProps[]
-    selectedContact: contactProps | null
-    setSelectedContact: (contact: contactProps) => void
-}
-
-type contactProps = {
-    uid: string
-    photoURL: string
-    name: string
-    position: string
-    email: string
-}
-
-export const useContactsStore = create<contactsStoreProps>(set => ({
+export const useContactsStore = create<contactsStorePropsTypes>(set => ({
     contacts: [],
+    setContacts: (contacts: contactPropsTypes[]) => set(() => ({ contacts })),
     selectedContact: null,
-    setSelectedContact: (contact: contactProps) =>
+    setSelectedContact: (contact: contactPropsTypes) =>
         set(() => ({ selectedContact: contact })),
 }))

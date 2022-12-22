@@ -1,23 +1,11 @@
 import React from "react"
-import moment, { Moment } from "moment"
+import moment from "moment"
 
 import { Container, MessageAndIconContainer, MessageContainer } from "./style"
 import { MessageStatusIcon } from "./MessageStatusIcons"
+import { MessageItemPropsTypes } from "../../../../../types/types"
 
-export type MessageProps = {
-    content?: string
-    src?: string
-    created_at: Moment | string
-    status: string
-    type: "audio" | "video" | "text" | "file" | "image"
-    from: string
-}
-
-export type MessateItemProps = {
-    message: MessageProps
-}
-
-export const MessageItem: React.FC<MessateItemProps> = ({ message }) => {
+export const MessageItem: React.FC<MessageItemPropsTypes> = ({ message }) => {
     const isUserLoggedIn = !!Math.round(Math.random())
     return (
         <Container className="box" isUserLoggedIn={isUserLoggedIn}>

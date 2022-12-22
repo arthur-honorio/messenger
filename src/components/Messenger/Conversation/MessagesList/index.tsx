@@ -1,17 +1,15 @@
-import React from "react"
-import { MessageItem, MessageProps } from "./MessageItem"
+import {
+    MessagePropsTypes,
+    MessagesListPropsTypes,
+} from "../../../../types/types"
 
 import { Container } from "./style"
 
-type MessagesListProps = {
-    messages: MessageProps[]
-}
-
-export const MessagesList: React.FC<MessagesListProps> = ({ messages }) => {
+export const MessagesList: React.FC<MessagesListPropsTypes> = ({ messages }) => {
     return (
         <Container className="messages-list">
             <ul>
-                {messages.map((message: MessageProps) => (
+                {messages.map((message: MessagePropsTypes) => (
                     <MessageItem message={message} />
                 ))}
             </ul>

@@ -1,4 +1,4 @@
-import React from "react"
+import { MessagePropsTypes } from "../../../types/types"
 import { MessageInput } from "./MessageInput"
 import { MessagesHeader } from "./MessagesHeader"
 import { MessagesList } from "./MessagesList"
@@ -10,9 +10,8 @@ type ConversationProps = {
     messages: MessageProps[]
 }
 
-export const Conversation: React.FC<ConversationProps> = ({ messages }) => {
-    const orderedMessages: MessageProps[] = messages.sort(
-        (a: MessageProps, b: MessageProps) => {
+    const orderedMessages: MessagePropsTypes[] = messages.sort(
+        (a: MessagePropsTypes, b: MessagePropsTypes) => {
             return a.created_at > b.created_at ? -1 : 1
         }
     )

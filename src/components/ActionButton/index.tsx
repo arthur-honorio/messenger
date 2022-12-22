@@ -1,17 +1,11 @@
 import React from "react"
 import { IoCheckmarkDone } from "react-icons/io5"
+import { ActionButtonPropsTypes } from "../../types/types"
 import { LoadingIcon } from "../LoadingIcon"
 
 import { ButtonContainer } from "./style"
 
-type ActionButtonProps = {
-    loadingSuccedded: boolean
-    isLoading: boolean
-    handleClick: (...args: any[]) => any
-    buttonContent: string
-}
-
-export const ActionButton: React.FC<ActionButtonProps> = ({
+export const ActionButton: React.FC<ActionButtonPropsTypes> = ({
     loadingSuccedded,
     isLoading,
     handleClick,
