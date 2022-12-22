@@ -1,6 +1,11 @@
 import { DocumentData } from "firebase/firestore"
 import { Moment } from "moment"
 
+export type UserFormPropsType = {
+    setFormData: (data: HTMLFormElement | null) => void
+    setShow: (arg: boolean) => void
+}
+
 export type userPropsTypes =
     | {
           displayName: string

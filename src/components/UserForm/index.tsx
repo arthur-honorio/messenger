@@ -1,14 +1,9 @@
 import React from "react"
 import { IoCloseCircleSharp, IoImages } from "react-icons/io5"
+import { UserFormPropsType } from "../../types/types"
 import { ModalContainer } from "../../style/modalStyle"
 
-type UserFormProps = {
-    setFormData: (data: HTMLFormElement | null) => void
-    setShow: (arg: boolean) => void
-    isEdition?: boolean
-}
-
-export const UserForm: React.FC<UserFormProps> = ({
+export const UserForm: React.FC<UserFormPropsType> = ({
     setFormData,
     isEdition,
     setShow,
