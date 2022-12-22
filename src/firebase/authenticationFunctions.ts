@@ -5,6 +5,7 @@ import {
 import { useContactsStore } from "../states/contacts"
 import { useLoggedUserStore } from "../states/loggedUser"
 import { useSnackbarStore } from "../states/snackbar"
+import { signInPropsType, signUpPropsType } from "../types/types"
 import { auth } from "./firebaseConfig"
 import {
     createDocument,
@@ -14,26 +15,7 @@ import {
 const { setLoggedUser } = useLoggedUserStore.getState()
 const { setContacts } = useContactsStore.getState()
 
-type signInProps = {
-    (
-        email: string,
-        password: string,
-        conclusionCallback?: (arg: boolean) => void,
-        startCallback?: () => void
-    ): void
-}
-
-type signUpProps = {
-    (
-        email: string,
-        password: string,
-        photoURL: string,
-        displayName: string,
-        position: string
-    ): Promise<void>
-}
-
-export const signIn: signInProps = async (
+export const signIn: signInPropsType = async (
     email,
     password,
     conclusionCallback,
@@ -75,7 +57,7 @@ export const signIn: signInProps = async (
     }
 }
 
-export const signUp: signUpProps = async (
+export const signUp: signUpPropsType = async (
     email,
     password,
     photoURL,

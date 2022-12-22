@@ -6,6 +6,25 @@ export type UserFormPropsType = {
     setShow: (arg: boolean) => void
 }
 
+export type signInPropsType = {
+    (
+        email: string,
+        password: string,
+        conclusionCallback?: (arg: boolean) => void,
+        startCallback?: () => void
+    ): void
+}
+
+export type signUpPropsType = {
+    (
+        email: string,
+        password: string,
+        photoURL: string,
+        displayName: string,
+        position: string
+    ): Promise<void>
+}
+
 export type userPropsTypes =
     | {
           displayName: string
