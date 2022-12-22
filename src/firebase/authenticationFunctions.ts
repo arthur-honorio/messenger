@@ -2,6 +2,7 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
 } from "firebase/auth"
+import { useContactsStore } from "../states/contacts"
 import { useLoggedUserStore } from "../states/loggedUser"
 import { useSnackbarStore } from "../states/snackbar"
 import { auth } from "./firebaseConfig"
@@ -11,6 +12,7 @@ import {
     updateDocument,
 } from "./firestoreFunctions"
 const { setLoggedUser } = useLoggedUserStore.getState()
+const { setContacts } = useContactsStore.getState()
 
 type signInProps = {
     (
@@ -49,6 +51,7 @@ export const signIn: signInProps = async (
                 conclusionCallback && conclusionCallback(true)
                 setTimeout(() => {
                     setLoggedUser({ ...userData, status: "online" })
+                    setContacts(userData.contacts)
                     useSnackbarStore.setState({
                         open: true,
                         message: `Usuário logado: ${email}`,

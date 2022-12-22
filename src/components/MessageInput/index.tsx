@@ -1,16 +1,12 @@
 import React, { useState } from "react"
-import { AddFile } from "./AddFile"
+import { AddFile } from "../AddFile"
 import { IoAdd, IoMic, IoSendSharp } from "react-icons/io5"
-import {
-    createDocument,
-    getDocument,
-    updateDocument,
-} from "../../../../firebase/firestoreFunctions"
-import { useLoggedUserStore } from "../../../../states/loggedUser"
-import { useContactsStore } from "../../../../states/contacts"
 import { arrayUnion, Timestamp } from "firebase/firestore"
 import { nanoid } from "nanoid"
 import { Container } from "./style"
+import { useLoggedUserStore } from "../../states/loggedUser"
+import { useContactsStore } from "../../states/contacts"
+import { createDocument, getDocument, updateDocument } from "../../firebase/firestoreFunctions"
 
 export const MessageInput: React.FC = () => {
     const [images, setImages] = useState({})

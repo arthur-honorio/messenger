@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
-import { updateDocument } from "../../../firebase/firestoreFunctions"
-import { useLoggedUserStore } from "../../../states/loggedUser"
-import { uploadFiles } from "../../../firebase/storageFunctions"
+import { updateDocument } from "../../firebase/firestoreFunctions"
+import { useLoggedUserStore } from "../../states/loggedUser"
+import { uploadFiles } from "../../firebase/storageFunctions"
 import { UserForm } from "../UserForm"
 
 type UserEditionModalProps = {

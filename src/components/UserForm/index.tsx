@@ -1,6 +1,6 @@
 import React from "react"
 import { IoCloseCircleSharp, IoImages } from "react-icons/io5"
-import { ModalContainer } from "../../../style/modalStyle"
+import { ModalContainer } from "../../style/modalStyle"
 
 type UserFormProps = {
     setFormData: (data: HTMLFormElement | null) => void

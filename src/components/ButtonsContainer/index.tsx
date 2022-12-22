@@ -1,6 +1,6 @@
 import React, { useState } from "react"
-import { signIn } from "../../../firebase/authenticationFunctions"
-import { ActionButton } from "../../ActionButton"
+import { signIn } from "../../firebase/authenticationFunctions"
+import { ActionButton } from "../ActionButton"
 
 import { Container } from "./style"
 

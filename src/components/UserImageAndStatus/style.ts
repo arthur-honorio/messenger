@@ -2,7 +2,7 @@ import styled from "styled-components"
 
 type UserStatusProps = {
     size: string
-    status: string | undefined
+    status: string | JSX.Element | undefined
 }
 
 type UserImageProps = {

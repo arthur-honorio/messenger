@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
-import { signUp } from "../../../firebase/authenticationFunctions"
-import { UserForm } from "../../UserProfile/UserForm"
+import { signUp } from "../../firebase/authenticationFunctions"
+import { UserForm } from "../UserForm"
 
 type signUpProps = {
     setShowSignUp: (arg0: boolean) => void

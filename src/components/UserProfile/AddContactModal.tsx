@@ -11,6 +11,8 @@ import { ActionButton } from "../ActionButton"
 
 import { IoCloseCircleSharp } from "react-icons/io5"
 import { ModalContainer } from "../../style/modalStyle"
+import { useContactsStore } from "../../states/contacts"
+import { contactPropsTypes } from "../../types/types"
 
 type AddContactModalProps = {
     show: boolean
@@ -21,7 +23,8 @@ export const AddContactModal: React.FC<AddContactModalProps> = ({
     show,
     setShow,
 }) => {
-    const { loggedUser, setLoggedUser } = useLoggedUserStore.getState()
+    const { loggedUser, setLoggedUser } = useLoggedUserStore(state => state)
+    const { setSelectedContact } = useContactsStore(state => state)
     const [isLoading, setIsLoading] = useState(false)
     const [loadingSuccedded, setLoaddingSuccedded] = useState(false)
 
@@ -29,22 +32,33 @@ export const AddContactModal: React.FC<AddContactModalProps> = ({
         setIsLoading(true)
         const data = new FormData(target)
         const { email } = Object.fromEntries(data.entries())
+        const searchedContact = loggedUser?.contacts.find(
+            (contact: contactPropsTypes) => contact.email === email
+        )
         if (loggedUser)
-            if (email.toString() !== loggedUser.email) {
+            if (email.toString() !== loggedUser.email && !searchedContact) {
                 const result = await dbSearch(
                     "users",
                     "email",
                     email.toString()
                 )
                 const contactToAdd = !result.empty && result.docs[0].data()
+
                 if (contactToAdd) {
+                    const conversationId =
+                        contactToAdd.uid > loggedUser.uid
+                            ? contactToAdd.uid + loggedUser.uid
+                            : loggedUser.uid + contactToAdd.uid
+                    const { email, displayName, photoURL, uid } = contactToAdd
                     updateDocument(
                         "users",
                         {
                             contacts: arrayUnion({
-                                uid: contactToAdd.uid,
-                                displayName: contactToAdd.displayName,
-                                photoURL: contactToAdd.photoURL,
+                                email,
+                                uid,
+                                displayName,
+                                photoURL,
+                                conversationId,
                             }),
                         },
                         loggedUser.uid
@@ -55,6 +69,7 @@ export const AddContactModal: React.FC<AddContactModalProps> = ({
                                 "users",
                                 loggedUser.uid
                             )
+                            updateDocument("messages", [], conversationId)
                             user && setLoggedUser(user)
                             useSnackbarStore.setState({
                                 open: true,
@@ -73,11 +88,20 @@ export const AddContactModal: React.FC<AddContactModalProps> = ({
                 }
             } else {
                 setIsLoading(false)
-                useSnackbarStore.setState({
-                    open: true,
-                    message: "O e-mail informado é o e-mail do usuário logado",
-                    type: "error",
-                })
+                if (email.toString() === loggedUser.email) {
+                    useSnackbarStore.setState({
+                        open: true,
+                        message: "Você inseriu o próprio e-mail",
+                        type: "error",
+                    })
+                } else {
+                    setSelectedContact(searchedContact)
+                    useSnackbarStore.setState({
+                        open: true,
+                        message: "O usuário já faz parte dos seus contatos",
+                        type: "info",
+                    })
+                }
             }
     }
 

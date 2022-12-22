@@ -1,6 +1,6 @@
 import React from "react"
 import { FaFile, FaSearch } from "react-icons/fa"
-import { UserProfile } from "../../../UserProfile"
+import { UserProfile } from "../UserProfile"
 
 import { Container, MessagesHeaderButtons } from "./style"
 

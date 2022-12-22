@@ -2,8 +2,8 @@ import React from "react"
 import moment from "moment"
 
 import { Container, MessageAndIconContainer, MessageContainer } from "./style"
-import { MessageStatusIcon } from "./MessageStatusIcons"
-import { MessageItemPropsTypes } from "../../../../../types/types"
+import { MessageStatusIcon } from "../MessageStatusIcons"
+import { MessageItemPropsTypes } from "../../types/types"
 
 export const MessageItem: React.FC<MessageItemPropsTypes> = ({ message }) => {
     const isUserLoggedIn = !!Math.round(Math.random())

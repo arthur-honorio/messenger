@@ -1,8 +1,8 @@
 import React from "react"
 
-import { UserProfile } from "../../UserProfile"
-import { ConversationsList } from "./ConversationsList"
-import { SearchBar } from "./SearchBar"
+import { UserProfile } from "../UserProfile"
+import { ConversationsList } from "../ConversationsList"
+import { SearchBar } from "../SearchBar"
 
 import { Container } from "./style"
 

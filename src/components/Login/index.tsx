@@ -1,6 +1,6 @@
 import React, { useState } from "react"
-import { ButtonsContainer } from "./ButtonsContainer"
-import { SignUp } from "./SignUp"
+import { ButtonsContainer } from "../ButtonsContainer"
+import { SignUp } from "../SignUp"
 
 import { Container } from "./style"
 
