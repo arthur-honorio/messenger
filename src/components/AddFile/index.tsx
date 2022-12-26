@@ -2,17 +2,11 @@ import React, { useEffect, useRef } from "react"
 import { IoFileTray, IoImages } from "react-icons/io5"
 import { uploadFiles } from "../../firebase/storageFunctions"
 import { useSnackbarStore } from "../../states/snackbar"
+import { AddFilePropsType } from "../../types/types"
 
 import { Container } from "./style"
 
-type AddFileProps = {
-    show: boolean
-    setShow: (arg0: boolean) => void
-    setImages: React.Dispatch<React.SetStateAction<{}>>
-    setFiles: React.Dispatch<React.SetStateAction<{}>>
-}
-
-export const AddFile: React.FC<AddFileProps> = ({
+export const AddFile: React.FC<AddFilePropsType> = ({
     show,
     setShow,
     setImages,

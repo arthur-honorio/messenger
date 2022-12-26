@@ -1,6 +1,17 @@
 import { DocumentData } from "firebase/firestore"
 import { Moment } from "moment"
 
+export type signUpComponentPropsType = {
+    setShowSignUp: (arg0: boolean) => void
+}
+
+export type AddFilePropsType = {
+    show: boolean
+    setShow: (arg0: boolean) => void
+    setImages: React.Dispatch<React.SetStateAction<{}>>
+    setFiles: React.Dispatch<React.SetStateAction<{}>>
+}
+
 export type UserFormPropsType = {
     setFormData: (data: HTMLFormElement | null) => void
     setShow: (arg: boolean) => void
@@ -19,9 +30,9 @@ export type signUpPropsType = {
     (
         email: string,
         password: string,
-        photoURL: string,
-        displayName: string,
-        position: string
+        photoURL?: string,
+        displayName?: string,
+        position?: string
     ): Promise<void>
 }
 

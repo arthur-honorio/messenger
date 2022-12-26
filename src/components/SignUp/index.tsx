@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react"
 import { signUp } from "../../firebase/authenticationFunctions"
+import { signUpComponentPropsType } from "../../types/types"
 import { UserForm } from "../UserForm"
 
-type signUpProps = {
-    setShowSignUp: (arg0: boolean) => void
-}
-
-export const SignUp: React.FC<signUpProps> = ({ setShowSignUp }) => {
+export const SignUp: React.FC<signUpComponentPropsType> = ({
+    setShowSignUp,
+}) => {
     const [formData, setFormData] = useState<HTMLFormElement | null>(null)
 
     useEffect(() => {

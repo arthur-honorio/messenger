@@ -31,7 +31,7 @@ export default createGlobalStyle`
         gap: 10px;
         position: relative;
 
-        svg {
+        & > svg {
             position: absolute;
             right: 15px;
             top: 15px;
