@@ -17,9 +17,36 @@ export const ModalContainer = styled.div`
     }
 
     .password {
-        display: flex;
+        display: grid;
         width: 100%;
+        grid-template-columns: repeat(9, 1fr);
         gap: 10px;
+        align-items: center;
+
+        svg {
+            color: white;
+            width: 25px;
+            height: 25px;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        svg:hover {
+            color: orchid;
+            cursor: pointer;
+        }
+    }
+
+    .passwords {
+        grid-column: span 4;
+
+        &.match {
+            border: greenyellow 4px solid;
+        }
+
+        &.error {
+            border: red 4px solid;
+        }
     }
 
     .name-position-avatar {
