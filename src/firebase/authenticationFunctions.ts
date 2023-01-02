@@ -50,6 +50,7 @@ export const signIn: signInPropsType = async (
                 type: "warning",
             })
         } else {
+            console.log(err)
             console.log(err.message)
             console.log(Object.entries(err))
         }
@@ -67,20 +68,30 @@ export const signUp: signUpPropsType = async (
     try {
         await createUserWithEmailAndPassword(auth, email, password).then(
             credential => {
-                const userData = {
+                const userCreationData = {
                     uid: credential.user.uid,
                     email: credential.user.email,
+                }
+                const userData = {
+                    ...userCreationData,
                     displayName,
                     photoURL,
                     position,
                     status: "online",
                     contacts: [],
                 }
-                createDocument("users", userData, credential.user.uid)
+                createDocument("users", userCreationData, credential.user.uid)
                 setLoggedUser({ userData })
             }
         )
     } catch (err: any) {
+        if (err.message.includes("auth/email-already-in-use")) {
+            useSnackbarStore.setState({
+                open: true,
+                message: "E-mail já cadastrado",
+                type: "error",
+            })
+        }
         console.log(err)
         console.log(err.message)
         console.log(Object.entries(err))

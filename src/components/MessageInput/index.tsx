@@ -9,8 +9,7 @@ import { useContactsStore } from "../../states/contacts"
 import { createDocument, getDocument, updateDocument } from "../../firebase/firestoreFunctions"
 
 export const MessageInput: React.FC = () => {
-    const [images, setImages] = useState({})
-    const [files, setFiles] = useState({})
+    const [files, setFiles] = useState<string[]>([])
     const [message, setMessage] = useState("")
     const [showAddFile, setShowAddFile] = useState(false)
     const { loggedUser } = useLoggedUserStore(state => state)
@@ -84,7 +83,6 @@ export const MessageInput: React.FC = () => {
             <AddFile
                 setShow={handleHideAddFile}
                 show={showAddFile}
-                setImages={setImages}
                 setFiles={setFiles}
             />
         </Container>

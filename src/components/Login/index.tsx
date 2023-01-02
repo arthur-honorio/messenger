@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { ButtonsContainer } from "../ButtonsContainer"
-import { SignUp } from "../SignUp"
+import { UserForm } from "../UserForm"
 
 import { Container } from "./style"
 
@@ -9,7 +9,9 @@ export const Login: React.FC = () => {
 
     return (
         <>
-            {showSignUp && <SignUp setShowSignUp={setShowSignUp} />}
+            {showSignUp && (
+                <UserForm show={showSignUp} setShow={setShowSignUp} />
+            )}
             <Container>
                 <h1>Rav-Messenger</h1>
                 <form>

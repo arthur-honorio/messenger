@@ -1,15 +1,13 @@
 import React, { useEffect, useRef } from "react"
 import { IoFileTray, IoImages } from "react-icons/io5"
-import { uploadFiles } from "../../firebase/storageFunctions"
-import { useSnackbarStore } from "../../states/snackbar"
 import { AddFilePropsType } from "../../types/types"
 
 import { Container } from "./style"
+import { handleAddFile } from "./utils"
 
 export const AddFile: React.FC<AddFilePropsType> = ({
     show,
     setShow,
-    setImages,
     setFiles,
 }) => {
     const addFileRef: React.MutableRefObject<HTMLDivElement | null> =
@@ -26,39 +24,8 @@ export const AddFile: React.FC<AddFilePropsType> = ({
         }
     }, [show])
 
-    const handleURL = (url: string, index: number, isFile: boolean = false) => {
-        if (isFile) {
-            setFiles(oldState => ({ ...oldState, [index]: url }))
-        } else {
-            setImages(oldState => ({ ...oldState, [index]: url }))
-        }
-    }
-
-    const handleAddFile = (
-        e: React.ChangeEvent<HTMLInputElement>,
-        isFile: boolean = false
-    ) => {
-        const MAX_SIZE = 1024 * 2
-        const files = e.target.files
-        const overSizedFilesError = []
-        if (files) {
-            for (let i = 0; i < files.length; i++) {
-                if (files[i].size > MAX_SIZE) {
-                    overSizedFilesError.push(files[i].name)
-                } else {
-                    uploadFiles(files[i], url => handleURL(url, i, isFile))
-                }
-            }
-        }
-        if (overSizedFilesError) {
-            useSnackbarStore.setState({
-                open: true,
-                message: `Imagens com mais de 2mb: ${overSizedFilesError.join(
-                    " - "
-                )}`,
-                type: "error",
-            })
-        }
+    const handleURL = (url: string) => {
+        setFiles(oldState => [...oldState, url])
     }
 
     const closeModalOnClick = (e: MouseEvent) => {
@@ -67,7 +34,7 @@ export const AddFile: React.FC<AddFilePropsType> = ({
                 addFileRef?.current?.getBoundingClientRect()
             if (e.x > right || e.y < top || e.x < left || e.y > bottom) {
                 setShow(false)
-                setImages({})
+                setFiles([])
             }
         }
     }
@@ -75,7 +42,7 @@ export const AddFile: React.FC<AddFilePropsType> = ({
         if (addFileRef.current && show) {
             if (e.key === "Escape") {
                 setShow(false)
-                setImages({})
+                setFiles([])
             }
         }
     }
@@ -93,7 +60,7 @@ export const AddFile: React.FC<AddFilePropsType> = ({
                         accept="image/*"
                         hidden
                         multiple={true}
-                        onChange={e => handleAddFile(e)}
+                        onChange={e => handleAddFile(e, handleURL)}
                     />
                 </div>
                 <div className="addFile">
@@ -107,7 +74,7 @@ export const AddFile: React.FC<AddFilePropsType> = ({
                         accept="file/*"
                         hidden
                         multiple={true}
-                        onChange={e => handleAddFile(e, true)}
+                        onChange={e => handleAddFile(e, handleURL)}
                     />
                 </div>
             </Container>

@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import { getAuth, signOut } from "firebase/auth"
 import { useSnackbarStore } from "../../states/snackbar"
-import { UserEdition } from "../UserEditionModal"
 import { Tooltip } from "@mui/material"
 import { AddContactModal } from "./AddContactModal"
 
@@ -16,6 +15,7 @@ import { useLoggedUserStore } from "../../states/loggedUser"
 import { updateDocument } from "../../firebase/firestoreFunctions"
 import { UserImageAndStatus } from "../UserImageAndStatus"
 import { UserInfo } from "../UserInfo"
+import { UserForm } from "../UserForm"
 
 export type UserContainerProps = {
     isFromProfile: boolean
@@ -79,7 +79,7 @@ export const UserProfile: React.FC<UserContainerProps> = ({
                         </UserProfileButton>
                     </Tooltip>
                     <UserProfileButtonsContainer className="user-buttons">
-                        <UserEdition
+                        <UserForm
                             show={editUser}
                             setShow={setEditUser}
                         />

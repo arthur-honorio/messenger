@@ -8,14 +8,14 @@ export const NoChatSelected: React.FC<{ contacts: contactPropsTypes[] }> = ({
     contacts,
 }) => {
     const [showAddContact, setShowAddContact] = useState(false)
-    const hasMessages = contacts.some(contact => contact.lastMessage)
+    const hasMessages = contacts?.some(contact => contact.lastMessage)
     return (
         <Container className="no-chat-selected">
             <AddContactModal
                 show={showAddContact}
                 setShow={setShowAddContact}
             />
-            {contacts.length ? (
+            {contacts?.length ? (
                 hasMessages ? (
                     <span className="no-chat-selected">
                         Nenhum chat selecionado

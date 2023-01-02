@@ -25,6 +25,7 @@ export const getDocument = async (collection: string, id: string) => {
         const doc = await getDoc(ref)
         if (doc.exists()) return doc.data()
     } catch (err: any) {
+        console.log(err)
         console.log(err.message)
         console.log(Object.entries(err))
     }
@@ -52,6 +53,7 @@ export const createDocument = async (
             : doc(db, collectionName)
         await setDoc(docRef, dataToAdd, { merge: true })
     } catch (err: any) {
+        console.log(err)
         console.log(err.message)
         console.log(Object.entries(err))
     }

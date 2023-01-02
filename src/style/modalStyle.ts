@@ -49,6 +49,33 @@ export const ModalContainer = styled.div`
         }
     }
 
+    .fake-button .img-button {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .fake-button .img-button .add-img {
+        visibility: hidden;
+        position: absolute;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        z-index: 1;
+    }
+
+    .fake-button:hover .img-button .add-img {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .fake-button:hover .img-button > img {
+        opacity: 0.5;
+    }
+
     .name-position-avatar {
         display: grid;
         grid-template-columns: calc(95% - 7rem) 7rem;
@@ -64,8 +91,8 @@ export const ModalContainer = styled.div`
     }
 
     .name-position-avatar label img {
-        width: 6rem;
-        height: 6rem;
+        width: 6.3rem;
+        height: 6.3rem;
         border-radius: 7rem;
     }
 

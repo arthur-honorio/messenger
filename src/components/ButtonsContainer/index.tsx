@@ -11,15 +11,15 @@ type ButtonsContainerProps = {
 export const ButtonsContainer: React.FC<ButtonsContainerProps> = ({
     setShowSignUp,
 }) => {
-    const [isLoading, setISLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     const [loadingSuccedded, setLoadingSuccedded] = useState(false)
 
     const startLoadingCallback = () => {
-        setISLoading(true)
+        setIsLoading(true)
     }
 
     const conclusionCallback = (success: boolean): void => {
-        setISLoading(false)
+        setIsLoading(false)
         success && setLoadingSuccedded(true)
     }
 
