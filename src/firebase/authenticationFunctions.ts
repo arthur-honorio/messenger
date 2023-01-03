@@ -1,11 +1,16 @@
 import {
     createUserWithEmailAndPassword,
+    onAuthStateChanged,
     signInWithEmailAndPassword,
 } from "firebase/auth"
 import { useContactsStore } from "../states/contacts"
 import { useLoggedUserStore } from "../states/loggedUser"
 import { useSnackbarStore } from "../states/snackbar"
-import { signInPropsType, signUpPropsType } from "../types/types"
+import {
+    signInPropsType,
+    signUpPropsType,
+    userPropsTypes,
+} from "../types/types"
 import { auth } from "./firebaseConfig"
 import {
     createDocument,
@@ -56,6 +61,19 @@ export const signIn: signInPropsType = async (
         }
         conclusionCallback && conclusionCallback(false)
     }
+}
+
+export const getOnlineUser = () => {
+    onAuthStateChanged(auth, user => {
+        if (user) {
+            const uid = user.uid
+            getDocument("users", uid).then(user =>
+                setLoggedUser(user as userPropsTypes)
+            )
+        } else {
+            setLoggedUser(null)
+        }
+    })
 }
 
 export const signUp: signUpPropsType = async (
