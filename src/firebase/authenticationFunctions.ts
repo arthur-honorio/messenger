@@ -32,21 +32,8 @@ export const signIn: signInPropsType = async (
         const {
             user: { uid },
         } = await signInWithEmailAndPassword(auth, email, password)
+        conclusionCallback && conclusionCallback(true)
         await updateDocument("users", { status: "online" }, uid)
-        getDocument("users", uid).then(userData => {
-            if (userData) {
-                conclusionCallback && conclusionCallback(true)
-                setTimeout(() => {
-                    setLoggedUser({ ...userData, status: "online" })
-                    setContacts(userData.contacts)
-                    useSnackbarStore.setState({
-                        open: true,
-                        message: `Usuário logado: ${email}`,
-                        type: "success",
-                    })
-                }, 1000)
-            }
-        })
     } catch (err: any) {
         if (err.code === "auth/user-not-found") {
             useSnackbarStore.setState({
@@ -63,14 +50,19 @@ export const signIn: signInPropsType = async (
     }
 }
 
-export const getOnlineUser = () => {
+export const getOnlineUser = (loadingCallback: (arg: boolean) => void) => {
+    loadingCallback(true)
     onAuthStateChanged(auth, user => {
         if (user) {
             const uid = user.uid
-            getDocument("users", uid).then(user =>
-                setLoggedUser(user as userPropsTypes)
-            )
+            getDocument("users", uid).then(user => {
+                const userProps = user as userPropsTypes
+                setLoggedUser(userProps)
+                setContacts(userProps.contacts)
+                loadingCallback(false)
+            })
         } else {
+            loadingCallback(false)
             setLoggedUser(null)
         }
     })
