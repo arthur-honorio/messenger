@@ -86,19 +86,16 @@ export const signUp: signUpPropsType = async (
     try {
         await createUserWithEmailAndPassword(auth, email, password).then(
             credential => {
-                const userCreationData = {
+                const userData = {
                     uid: credential.user.uid,
                     email: credential.user.email,
-                }
-                const userData = {
-                    ...userCreationData,
-                    displayName,
-                    photoURL,
-                    position,
+                    displayName: displayName || "",
+                    photoURL: photoURL || "",
+                    position: position || "",
                     status: "online",
                     contacts: [],
                 }
-                createDocument("users", userCreationData, credential.user.uid)
+                createDocument("users", userData, credential.user.uid)
                 setLoggedUser({ userData })
             }
         )

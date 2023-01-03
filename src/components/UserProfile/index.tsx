@@ -59,7 +59,7 @@ export const UserProfile: React.FC<UserContainerProps> = ({
                     user={{
                         name:
                             loggedUser?.displayName ||
-                            loggedUser?.email.split("@")[0],
+                            loggedUser?.email?.split("@")[0],
                         position: loggedUser?.position || undefined,
                     }}
                 />
