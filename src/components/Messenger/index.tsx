@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { Login } from "../Login"
 import { Conversation } from "../Conversation"
 import { Dashboard } from "../Dashboard"
@@ -10,11 +10,12 @@ import { getOnlineUser } from "../../firebase/authenticationFunctions"
 
 export const Messenger: React.FC = () => {
     const { loggedUser } = useLoggedUserStore(state => state)
-    
+    const [loading, setLoading] = useState<boolean>(false)
+
     useEffect(() => {
-        getOnlineUser()
+        getOnlineUser(setLoading)
     }, [])
-    
+
     const { selectedContact, contacts } = useContactsStore(state => state)
     if (loggedUser) {
         return (
@@ -28,6 +29,7 @@ export const Messenger: React.FC = () => {
             </Container>
         )
     } else {
+        if (loading) return <Login loading={loading} />
         return <Login />
     }
 }

@@ -9,7 +9,7 @@ export const Container = styled.div`
     border-radius: 25px;
     position: absolute;
     z-index: 100;
-    animation: 1s loading linear infinite;
+    animation: 1.5s loading linear infinite;
 
     @keyframes loading {
         100% {
