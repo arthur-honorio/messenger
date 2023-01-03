@@ -5,17 +5,18 @@ import { Tooltip } from "@mui/material"
 import { AddContactModal } from "./AddContactModal"
 
 import { IoPersonAdd, IoPencilSharp, IoLogOut } from "react-icons/io5"
+import { useLoggedUserStore } from "../../states/loggedUser"
+import { updateDocument } from "../../firebase/firestoreFunctions"
+import { UserImageAndStatus } from "../UserImageAndStatus"
+import { UserInfo } from "../UserInfo"
+import { UserForm } from "../UserForm"
+
 import {
     Container,
     UserDetails,
     UserProfileButton,
     UserProfileButtonsContainer,
 } from "./style"
-import { useLoggedUserStore } from "../../states/loggedUser"
-import { updateDocument } from "../../firebase/firestoreFunctions"
-import { UserImageAndStatus } from "../UserImageAndStatus"
-import { UserInfo } from "../UserInfo"
-import { UserForm } from "../UserForm"
 
 export type UserContainerProps = {
     isFromProfile: boolean
@@ -26,10 +27,9 @@ export const UserProfile: React.FC<UserContainerProps> = ({
     isFromProfile,
     imgSize,
 }) => {
-    const { loggedUser } = useLoggedUserStore(state => state)
+    const { loggedUser, setLoggedUser } = useLoggedUserStore(state => state)
     const [editUser, setEditUser] = useState(false)
     const [addContact, setAddContact] = useState(false)
-    const { setLoggedUser } = useLoggedUserStore(state => state)
 
     const handleSignOut = async () => {
         signOut(getAuth()).then(() => {
@@ -57,8 +57,10 @@ export const UserProfile: React.FC<UserContainerProps> = ({
                 />
                 <UserInfo
                     user={{
-                        name: loggedUser?.displayName || undefined,
-                        position: "Frontend",
+                        name:
+                            loggedUser?.displayName ||
+                            loggedUser?.email.split("@")[0],
+                        position: loggedUser?.position || undefined,
                     }}
                 />
             </UserDetails>
@@ -68,21 +70,18 @@ export const UserProfile: React.FC<UserContainerProps> = ({
                         show={addContact}
                         setShow={setAddContact}
                     />
-                    <Tooltip title="Adicionar contato">
-                        <UserProfileButton
-                            className="add-contacts"
-                            onClick={() => {
-                                setAddContact(true)
-                            }}
-                        >
-                            <IoPersonAdd />
-                        </UserProfileButton>
-                    </Tooltip>
                     <UserProfileButtonsContainer className="user-buttons">
-                        <UserForm
-                            show={editUser}
-                            setShow={setEditUser}
-                        />
+                        <Tooltip title="Adicionar contato">
+                            <UserProfileButton
+                                className="add-contacts"
+                                onClick={() => {
+                                    setAddContact(true)
+                                }}
+                            >
+                                <IoPersonAdd />
+                            </UserProfileButton>
+                        </Tooltip>
+                        <UserForm show={editUser} setShow={setEditUser} />
                         <Tooltip title="Editar usuário">
                             <UserProfileButton
                                 className="user-edit"

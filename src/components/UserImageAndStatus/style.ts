@@ -1,28 +1,18 @@
 import styled from "styled-components"
+import {
+    ContainerPropsTypes,
+    UserImagePropsTypes,
+    UserStatusPropsTypes,
+} from "../../types/types"
 
-type UserStatusProps = {
-    size: string
-    status: string | JSX.Element | undefined
-}
-
-type UserImageProps = {
-    size: string
-    src: string | undefined
-    alt: string
-}
-
-type ContainerProps = {
-    size: string
-}
-
-export const Container = styled.div<ContainerProps>`
+export const Container = styled.div<ContainerPropsTypes>`
     display: flex;
     width: fit-content;
     height: fit-content;
     position: relative;
 `
 
-export const UserStatus = styled.div<UserStatusProps>`
+export const UserStatus = styled.div<UserStatusPropsTypes>`
     width: ${props =>
         props.size === "L" ? "20px" : props.size === "M" ? "18px" : "10px"};
     height: ${props =>
@@ -35,11 +25,29 @@ export const UserStatus = styled.div<UserStatusProps>`
     border: 2px solid white;
 `
 
-export const UserImage = styled.img<UserImageProps>`
+export const UserImage = styled.img<UserImagePropsTypes>`
     width: ${props =>
         props.size === "L" ? "70px" : props.size === "M" ? "55px" : "40px"};
     height: ${props =>
         props.size === "L" ? "70px" : props.size === "M" ? "55px" : "40px"};
     border-radius: 100%;
     background: orchid;
+`
+
+export const UserNoImage = styled.div<Pick<UserImagePropsTypes, "size">>`
+    width: ${props =>
+        props.size === "L" ? "70px" : props.size === "M" ? "55px" : "40px"};
+    height: ${props =>
+        props.size === "L" ? "70px" : props.size === "M" ? "55px" : "40px"};
+    border-radius: 100%;
+    background: orchid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+
+    & svg {
+        width: 40%;
+        height: 40%;
+    }
 `

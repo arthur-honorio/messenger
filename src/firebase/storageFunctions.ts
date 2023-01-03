@@ -8,7 +8,7 @@ import { app } from "./firebaseConfig"
 
 const storage = getStorage(app)
 
-export const uploadFiles = async (file: any, callback: (url: string) => void) => {
+export const uploadFiles = (file: any, callback: (url: string) => void) => {
     const fileName = `${file.lastModified}-${file.name}`
     const storageRef = ref(storage, fileName)
 
@@ -19,6 +19,7 @@ export const uploadFiles = async (file: any, callback: (url: string) => void) =>
             console.log(snapshot)
         },
         err => {
+            console.log(err)
             console.log(err.message)
             console.log(Object.entries(err))
         },

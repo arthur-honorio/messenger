@@ -1,17 +1,8 @@
 import React from "react"
-import { MouseEventHandler } from "react"
+import { IoPerson } from "react-icons/io5"
+import { UserImageAndStatusProps } from "../../types/types"
 
-import { Container, UserStatus, UserImage } from "./style"
-
-export type UserImageAndStatusProps = {
-    imageSize: string
-    onClick?: MouseEventHandler<HTMLDivElement>
-    user: {
-        imageSrc: string | undefined
-        status: string | JSX.Element | undefined
-        name?: string | undefined
-    }
-}
+import { Container, UserStatus, UserImage, UserNoImage } from "./style"
 
 export const UserImageAndStatus: React.FC<UserImageAndStatusProps> = ({
     imageSize,
@@ -24,7 +15,14 @@ export const UserImageAndStatus: React.FC<UserImageAndStatusProps> = ({
             onClick={onClick}
             size={imageSize}
         >
-            <UserImage src={user.imageSrc} alt="User" size={imageSize} />
+            {user?.imageSrc ? (
+                <UserImage src={user?.imageSrc} alt="User" size={imageSize} />
+            ) : (
+                <UserNoImage size={imageSize}>
+                    <IoPerson />
+                </UserNoImage>
+            )}
+
             <UserStatus size={imageSize} status={user.status} />
         </Container>
     )

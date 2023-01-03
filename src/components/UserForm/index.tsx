@@ -6,12 +6,17 @@ import { useLoggedUserStore } from "../../states/loggedUser"
 import { ModalContainer } from "../../style/modalStyle"
 import { useSnackbarStore } from "../../states/snackbar"
 import { uploadFiles } from "../../firebase/storageFunctions"
-import { updateDocument } from "../../firebase/firestoreFunctions"
+import { getDocument, updateDocument } from "../../firebase/firestoreFunctions"
 import { signUp } from "../../firebase/authenticationFunctions"
+import { ActionButton } from "../ActionButton"
 
 export const UserForm: React.FC<UserFormPropsType> = ({ setShow, show }) => {
     const { loggedUser, setLoggedUser } = useLoggedUserStore(state => state)
     const [password, setPassword] = useState<string | null>(null)
+    const [targetData, setTargetData] = useState<HTMLFormElement | null>(null)
+    const [continueToUpdate, setContinueToUpdate] = useState<
+        "loading" | "update" | "finish" | null
+    >(null)
     const [newPhoto, setNewPhoto] = useState<{
         photoToShow: string
         photoFile: File | undefined | null
@@ -24,7 +29,7 @@ export const UserForm: React.FC<UserFormPropsType> = ({ setShow, show }) => {
     useEffect(() => {
         const closeOnEsc = (e: KeyboardEvent) => {
             if (e.key === "Escape") {
-                handleCancel()
+                handleClose()
             }
         }
 
@@ -37,53 +42,87 @@ export const UserForm: React.FC<UserFormPropsType> = ({ setShow, show }) => {
         }
     }, [show])
 
-    const handleCancel = () => {
+    useEffect(() => {
+        if (targetData && continueToUpdate === "update")
+            continueUserUpdate(targetData)
+    }, [targetData, continueToUpdate])
+
+    const handleClose = () => {
         setNewPhoto({
             photoToShow: "",
             photoFile: undefined,
             finalPhotoURL: "",
         })
         setShow(false)
+        setContinueToUpdate(null)
     }
 
-    const getDataToAdd = async (
-        data: FormData
-    ): Promise<UserEditionPropsType | undefined> => {
+    const getDataToAdd = (data: FormData) => {
         const { displayName, position, email } = Object.fromEntries(data)
 
-        if (data) {
-            if (newPhoto?.photoFile) {
-                await uploadFiles(newPhoto?.photoFile, url =>
-                    setNewPhoto(state => ({ ...state, finalPhotoURL: url }))
-                )
-            }
-            let dataToAdd: UserEditionPropsType = {} as UserEditionPropsType
-            if (displayName) dataToAdd.displayName = displayName.toString()
-            if (position) dataToAdd.position = position.toString()
-            if (password) dataToAdd.password = password.toString()
-            if (email) dataToAdd.email = email.toString()
-            if (newPhoto.finalPhotoURL)
-                dataToAdd.photoURL = newPhoto.finalPhotoURL
-            return dataToAdd
+        let dataToAdd: UserEditionPropsType = {} as UserEditionPropsType
+        if (displayName) dataToAdd.displayName = displayName.toString()
+        if (position) dataToAdd.position = position.toString()
+        if (password) dataToAdd.password = password.toString()
+        if (email) dataToAdd.email = email.toString()
+
+        return dataToAdd
+    }
+
+    const handleSave = (target: HTMLFormElement) => {
+        setContinueToUpdate("loading")
+        setTargetData(target)
+        if (newPhoto?.photoFile) {
+            uploadFiles(newPhoto?.photoFile, url => {
+                setNewPhoto(state => ({
+                    ...state,
+                    finalPhotoURL: url,
+                }))
+                setContinueToUpdate("update")
+            })
+        } else {
+            setContinueToUpdate("update")
         }
     }
 
-    const handleSave = async (target: HTMLFormElement) => {
-        const data = new FormData(target)
-        const dataToAdd = await getDataToAdd(data)
+    const handleFinish = () => {
+        setContinueToUpdate("finish")
+        setTimeout(() => {
+            setShow(false)
+            setContinueToUpdate(null)
+        }, 2000)
+    }
 
-        if (dataToAdd) {
+    const continueUserUpdate = (target: HTMLFormElement) => {
+        const data = new FormData(target)
+        const dataToAdd = getDataToAdd(data) || {}
+        if (newPhoto.finalPhotoURL) dataToAdd.photoURL = newPhoto.finalPhotoURL
+
+        if (!Object.values(dataToAdd).length) {
+            setTimeout(() => {
+                useSnackbarStore.setState({
+                    open: true,
+                    message: "Nenhum dado alterado",
+                    type: "warning",
+                })
+                setContinueToUpdate(null)
+            }, 2000)
+            return
+        } else {
             if (loggedUser) {
-                if (loggedUser.email && dataToAdd)
+                if (loggedUser.email)
                     try {
-                        updateDocument(
-                            "users",
-                            dataToAdd,
-                            loggedUser.email.toString()
+                        updateDocument("users", dataToAdd, loggedUser.uid).then(
+                            () =>
+                                getDocument("users", loggedUser.uid).then(
+                                    data => {
+                                        data && setLoggedUser(data)
+                                        handleFinish()
+                                    }
+                                )
                         )
-                        setLoggedUser({ ...loggedUser, ...dataToAdd })
-                        setShow(false)
                     } catch (err: any) {
+                        console.log(err)
                         console.log(err.message)
                         console.log(Object.entries(err))
                     }
@@ -95,20 +134,21 @@ export const UserForm: React.FC<UserFormPropsType> = ({ setShow, show }) => {
                         dataToAdd.photoURL,
                         dataToAdd.displayName,
                         dataToAdd.position
-                    )
-                    setShow(false)
+                    ).then(() => {
+                        handleFinish()
+                    })
                 }
             }
         }
     }
 
-    function comparePasswords(startCompare: boolean, repeated: string) {
+    const comparePasswords = (startCompare: boolean, repeated: string) => {
         if (startCompare && repeated === password && password && repeated)
             setEqualPasswords(true)
         else setEqualPasswords(false)
     }
 
-    function handleFile(files: FileList | null) {
+    const handleFile = (files: FileList | null) => {
         const reader = new FileReader()
         const MAX_FILE_SIZE = 2 * 1048576 //2MB
         let file: File | null = null
@@ -143,7 +183,7 @@ export const UserForm: React.FC<UserFormPropsType> = ({ setShow, show }) => {
                     <h2>{`${
                         loggedUser ? "Editar usuário" : "Criar conta"
                     }`}</h2>
-                    <IoCloseCircleSharp onClick={handleCancel} />
+                    <IoCloseCircleSharp onClick={handleClose} />
                     {!loggedUser ? (
                         <>
                             <input
@@ -265,16 +305,19 @@ export const UserForm: React.FC<UserFormPropsType> = ({ setShow, show }) => {
                     </div>
                     <hr />
                     <footer>
-                        <button
-                            type="submit"
-                            disabled={equalPasswords === false}
-                        >
-                            Salvar
-                        </button>
+                        <ActionButton
+                            loadingSuccedded={continueToUpdate === "finish"}
+                            isLoading={
+                                !!continueToUpdate &&
+                                continueToUpdate !== "finish"
+                            }
+                            buttonContent="Salvar"
+                            buttonType="submit"
+                        />
                         <button
                             className="alt-button"
                             type="button"
-                            onClick={handleCancel}
+                            onClick={handleClose}
                         >
                             Cancelar
                         </button>

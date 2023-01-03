@@ -1,5 +1,44 @@
 import { DocumentData } from "firebase/firestore"
 import { Moment } from "moment"
+import { MouseEventHandler } from "react"
+
+export type UserStatusPropsTypes = {
+    size: string
+    status: string | JSX.Element | undefined
+}
+
+export type UserImagePropsTypes = {
+    size: string
+    src: string | undefined
+    alt: string
+}
+
+export type ContainerPropsTypes = {
+    size: string
+}
+
+export type UserImageAndStatusProps = {
+    imageSize: string
+    onClick?: MouseEventHandler<HTMLDivElement>
+    user: {
+        imageSrc: string | undefined
+        status: string | JSX.Element | undefined
+        name?: string | undefined
+    }
+}
+
+export type UserEditionModalPropsTypes = {
+    show: boolean
+    setShow: (arg0: boolean) => void
+}
+
+export type UserEditionPropsType = {
+    displayName?: string
+    position?: string
+    photoURL?: string
+    email?: string
+    password?: string
+}
 
 export type signUpComponentPropsType = {
     setShowSignUp: (arg0: boolean) => void
@@ -8,13 +47,12 @@ export type signUpComponentPropsType = {
 export type AddFilePropsType = {
     show: boolean
     setShow: (arg0: boolean) => void
-    setImages: React.Dispatch<React.SetStateAction<{}>>
-    setFiles: React.Dispatch<React.SetStateAction<{}>>
+    setFiles: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 export type UserFormPropsType = {
-    setFormData: (data: HTMLFormElement | null) => void
     setShow: (arg: boolean) => void
+    show: boolean
 }
 
 export type signInPropsType = {
@@ -64,8 +102,9 @@ export type contactPropsTypes = {
 export type ActionButtonPropsTypes = {
     loadingSuccedded: boolean
     isLoading: boolean
-    handleClick: (...args: any[]) => any
+    handleClick?: (...args: any[]) => any
     buttonContent: string
+    buttonType: "button" | "submit" | "reset" | undefined
 }
 
 export type MessagePropsTypes = {
