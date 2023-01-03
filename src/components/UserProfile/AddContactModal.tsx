@@ -142,8 +142,8 @@ export const AddContactModal: React.FC<AddContactModalProps> = ({
                         <ActionButton
                             loadingSuccedded={loadingSuccedded}
                             isLoading={isLoading}
-                            handleClick={handleAddContact}
                             buttonContent="Adicionar"
+                            buttonType="submit"
                         />
                         <button
                             className="alt-button"

@@ -10,12 +10,14 @@ export const ActionButton: React.FC<ActionButtonPropsTypes> = ({
     isLoading,
     handleClick,
     buttonContent,
+    buttonType = "button"
 }) => {
     return (
         <ButtonContainer
             className={`action-button${loadingSuccedded ? " success" : ""}`}
             onClick={handleClick}
             style={{ position: "relative" }}
+            type={buttonType}
         >
             {isLoading ? (
                 <LoadingIcon />

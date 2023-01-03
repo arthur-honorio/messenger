@@ -31,12 +31,7 @@ export const ButtonsContainer: React.FC<ButtonsContainerProps> = ({
         let password = htmlElements[1]?.value
 
         if (email && password) {
-            signIn(
-                email,
-                password,
-                conclusionCallback,
-                startLoadingCallback
-            )
+            signIn(email, password, conclusionCallback, startLoadingCallback)
         }
     }
 
@@ -52,6 +47,7 @@ export const ButtonsContainer: React.FC<ButtonsContainerProps> = ({
                 loadingSuccedded={loadingSuccedded}
                 handleClick={handleLogInClick}
                 buttonContent="Entrar"
+                buttonType="button"
             />
             <button className="alt-button" onClick={handleSignUpClick}>
                 Criar conta
