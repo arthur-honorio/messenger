@@ -22,8 +22,8 @@ export const NoChatSelected: React.FC<{ contacts: contactPropsTypes[] }> = ({
                     </span>
                 ) : (
                     <>
-                        <span className="no-chat-selected">
-                            Você ainda não falou com ninguém?
+                        <span className="no-chat">
+                            Ainda não falou com ninguém?
                         </span>
                         <p className="start-chat-info">
                             Para iniciar um chat você pode:
@@ -32,13 +32,12 @@ export const NoChatSelected: React.FC<{ contacts: contactPropsTypes[] }> = ({
                             className="add-contacts"
                             onClick={() => setShowAddContact(true)}
                         >
-                            1. Adicione um novo contato e comece a conversar
+                            Clicar aqui para adicionar um novo contato
                         </p>
                         <p
                             className="search-contacts"
-                            onClick={() => setShowAddContact(true)}
                         >
-                            2. Busque nos seus contatos e comece uma conversa
+                            Selecionar um dos seus contatos na lista ao lado
                         </p>
                     </>
                 )

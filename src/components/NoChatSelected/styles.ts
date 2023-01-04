@@ -12,19 +12,27 @@ export const Container = styled.div`
     flex-direction: column;
     gap: 20px;
 
+    .no-chat {
+        font-size: 35px;
+        color: black;
+        margin-top: 40px;
+    }
+
     .start-chat-info {
         font-size: 25px;
         color: rgb(120, 120, 120);
         margin-top: 40px;
     }
 
-    .add-contacts,
+    .add-contacts {
+        font-size: 25px;
+        color: darkorchid;
+        cursor: pointer;
+    }
+    
     .search-contacts {
         font-size: 25px;
-        cursor: pointer;
-        color: darkorchid;
-    }
-    .search-contacts {
         color: orchid;
+        cursor: default;
     }
 `
