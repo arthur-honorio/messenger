@@ -15,8 +15,8 @@ export const UserImageAndStatus: React.FC<UserImageAndStatusProps> = ({
             onClick={onClick}
             size={imageSize}
         >
-            {user?.imageSrc ? (
-                <UserImage src={user?.imageSrc} alt="User" size={imageSize} />
+            {user?.photoURL ? (
+                <UserImage src={user?.photoURL} alt="User" size={imageSize} />
             ) : (
                 <UserNoImage size={imageSize}>
                     <IoPerson />

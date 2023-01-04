@@ -1,14 +1,6 @@
 import styled from "styled-components"
 
-export type ContainerProps = {
-    isFromProfile: boolean
-}
-
-type EditButtonProps = {
-    onClick: () => void
-}
-
-export const Container = styled.header<ContainerProps>`
+export const Container = styled.header<{ isFromProfile?: boolean }>`
     width: 100%;
     display: flex;
     align-items: center;
@@ -35,7 +27,9 @@ export const Container = styled.header<ContainerProps>`
     }
 `
 
-export const UserProfileButton = styled.div<EditButtonProps>`
+export const UserProfileButton = styled.div<{
+    onClick: () => void
+}>`
     display: flex;
     justify-content: center;
     gap: 10px;
@@ -46,13 +40,6 @@ export const UserProfileButton = styled.div<EditButtonProps>`
         cursor: pointer;
         font-size: 25px;
     }
-`
-
-export const UserDetails = styled.div`
-    display: flex;
-    width: fit-content;
-    align-items: center;
-    gap: 20px;
 `
 
 export const UserProfileButtonsContainer = styled.div`

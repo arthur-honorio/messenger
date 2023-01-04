@@ -7,25 +7,18 @@ import { AddContactModal } from "./AddContactModal"
 import { IoPersonAdd, IoPencilSharp, IoLogOut } from "react-icons/io5"
 import { useLoggedUserStore } from "../../states/loggedUser"
 import { updateDocument } from "../../firebase/firestoreFunctions"
-import { UserImageAndStatus } from "../UserImageAndStatus"
-import { UserInfo } from "../UserInfo"
 import { UserForm } from "../UserForm"
+import { UserDetails } from "../UserDetails"
 
 import {
     Container,
-    UserDetails,
     UserProfileButton,
     UserProfileButtonsContainer,
 } from "./style"
+import { contactPropsTypes, UserProfileContainerProps } from "../../types/types"
 
-export type UserContainerProps = {
-    isFromProfile: boolean
-    imgSize: string
-}
-
-export const UserProfile: React.FC<UserContainerProps> = ({
+export const UserProfile: React.FC<UserProfileContainerProps> = ({
     isFromProfile,
-    imgSize,
 }) => {
     const { loggedUser, setLoggedUser } = useLoggedUserStore(state => state)
     const [editUser, setEditUser] = useState(false)
@@ -46,24 +39,14 @@ export const UserProfile: React.FC<UserContainerProps> = ({
 
     return (
         <Container className="user-profile" isFromProfile={isFromProfile}>
-            <UserDetails className="user-details">
-                <UserImageAndStatus
-                    imageSize={imgSize}
-                    user={{
-                        name: loggedUser?.displayName || undefined,
-                        imageSrc: loggedUser?.photoURL || undefined,
-                        status: "online",
-                    }}
+            {loggedUser && (
+                <UserDetails
+                    className="user-details"
+                    imgSize="L"
+                    user={loggedUser as contactPropsTypes}
+                    isFromProfile
                 />
-                <UserInfo
-                    user={{
-                        name:
-                            loggedUser?.displayName ||
-                            loggedUser?.email?.split("@")[0],
-                        position: loggedUser?.position || undefined,
-                    }}
-                />
-            </UserDetails>
+            )}
             {isFromProfile ? (
                 <>
                     <AddContactModal

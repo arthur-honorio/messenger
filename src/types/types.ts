@@ -2,6 +2,16 @@ import { DocumentData } from "firebase/firestore"
 import { Moment } from "moment"
 import { MouseEventHandler } from "react"
 
+export type UserProfileContainerProps = {
+    isFromProfile?: boolean
+    imgSize: "L" | "M" | "S"
+}
+
+export interface UserDetailsTypes extends UserProfileContainerProps {
+    user: contactPropsTypes
+    className: string
+}
+
 export type UserStatusPropsTypes = {
     size: string
     status: string | JSX.Element | undefined
@@ -20,11 +30,7 @@ export type ContainerPropsTypes = {
 export type UserImageAndStatusProps = {
     imageSize: string
     onClick?: MouseEventHandler<HTMLDivElement>
-    user: {
-        imageSrc: string | undefined
-        status: string | JSX.Element | undefined
-        name?: string | undefined
-    }
+    user: userPropsTypes
 }
 
 export type UserEditionModalPropsTypes = {
@@ -74,23 +80,19 @@ export type signUpPropsType = {
     ): Promise<void>
 }
 
-export type userPropsTypes =
-    | {
-          displayName: string
-          photoURL: string | null
-          position?: string | null
-          status?: string
-          uid: string
-          email: string
-          contacts?: contactPropsTypes[]
-      }
-    | DocumentData
-
-export type contactPropsTypes = {
-    email: string
-    uid: string
+export type userBasePropsTypes = {
     displayName: string
-    photoURL: string
+    uid: string
+    email: string
+    photoURL?: string
+    position?: string
+    status?: string | React.ReactNode
+    contacts?: contactPropsTypes[]
+}
+
+export type userPropsTypes = userBasePropsTypes | DocumentData
+
+export interface contactPropsTypes extends userBasePropsTypes {
     conversationId?: string
     lastMessage?: {
         content: string

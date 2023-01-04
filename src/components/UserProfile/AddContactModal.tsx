@@ -64,12 +64,17 @@ export const AddContactModal: React.FC<AddContactModalProps> = ({
                         loggedUser.uid
                     ).then(() => {
                         setLoaddingSuccedded(true)
+                        setIsLoading(false)
                         setTimeout(async () => {
                             const user = await getDocument(
                                 "users",
                                 loggedUser.uid
                             )
-                            updateDocument("messages", [], conversationId)
+                            updateDocument(
+                                "messages",
+                                { conversation: [] },
+                                conversationId
+                            )
                             user && setLoggedUser(user)
                             useSnackbarStore.setState({
                                 open: true,
