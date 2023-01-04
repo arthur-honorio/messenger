@@ -1,62 +1,77 @@
 import React, { useEffect, useState } from "react"
-import { IoImage, IoPlayBackCircle } from "react-icons/io5"
 import { useContactsStore } from "../../states/contacts"
-import { useLoggedUserStore } from "../../states/loggedUser"
 import { contactPropsTypes } from "../../types/types"
-import { UserImageAndStatus } from "../UserImageAndStatus"
+import { UserDetails } from "../UserDetails"
 
-import { Container } from "./style"
+import { Container, SubContainer } from "./style"
 
 export const ConversationsList: React.FC = () => {
-    const loggedUser = useLoggedUserStore(state => state.loggedUser)
     const { contacts, setSelectedContact } = useContactsStore(state => state)
-    const [initiatedChats, setInitiatedChats] = useState<contactPropsTypes[] | []>(
-        []
-    )
+    const [initiatedChats, setInitiatedChats] = useState<
+        contactPropsTypes[] | []
+    >([])
+    const [noChatContacts, setNoChatContacts] = useState<
+        contactPropsTypes[] | []
+    >([])
 
     useEffect(() => {
-        const contactsWithConversation =
-            contacts?.filter(contact => contact?.lastMessage?.content) || []
+        const contactsWithConversation: contactPropsTypes[] = []
+        const contactsWithoutConversation: contactPropsTypes[] = []
+        contacts?.forEach(contact => {
+            if (contact?.lastMessage) contactsWithConversation.push(contact)
+            else contactsWithoutConversation.push(contact)
+        })
         setInitiatedChats(contactsWithConversation)
+        setNoChatContacts(contactsWithoutConversation)
     }, [contacts])
-
-    function getMessageStatus(lastMessage: contactPropsTypes["lastMessage"]) {
-        switch (lastMessage?.type) {
-            case "image":
-                return <IoImage />
-            case "audio":
-                return <IoPlayBackCircle />
-            default:
-                return lastMessage?.content
-        }
-    }
 
     function handleSetSelectedContact(contact: contactPropsTypes) {
         setSelectedContact(contact)
     }
 
-    if (loggedUser && contacts?.length) {
-        return (
-            <Container className="conversations-list-item">
-                {initiatedChats?.map(contact => (
-                    <UserImageAndStatus
-                        imageSize="S"
-                        user={{
-                            imageSrc: contact.photoURL,
-                            status: getMessageStatus(contact.lastMessage),
-                            name: contact.displayName,
-                        }}
-                        onClick={() => handleSetSelectedContact(contact)}
-                    />
-                ))}
-                <span className="user-name" />
-            </Container>
-        )
-    } else {
-        return (
-            <div className="no-conversations">
-                Adicione contatos e comece a conversar
-            </div>
-        )
-    }
+    return (
+        <Container>
+            <SubContainer className="contacts-list">
+                <h3>Conversas</h3>
+                {initiatedChats.length ? (
+                    initiatedChats?.map(contact => (
+                        <li
+                            className="conversation-list-li"
+                            onClick={() => handleSetSelectedContact(contact)}
+                        >
+                            <UserDetails
+                                className="conversation-list-item"
+                                imgSize="S"
+                                user={contact}
+                                key={contact.uid}
+                            />
+                        </li>
+                    ))
+                ) : (
+                    <p className="no-conversations">Nenhuma conversa</p>
+                )}
+            </SubContainer>
+            <hr />
+            <SubContainer className="conversations-list">
+                <h3>Contatos</h3>
+                {noChatContacts.length ? (
+                    noChatContacts?.map(contact => (
+                        <li
+                            className="contacts-list-li"
+                            onClick={() => handleSetSelectedContact(contact)}
+                        >
+                            <UserDetails
+                                className="conversation-list-item"
+                                imgSize="S"
+                                user={contact}
+                                key={contact.uid}
+                            />
+                        </li>
+                    ))
+                ) : (
+                    <p className="no-contacts">Nenhum contato adicionado</p>
+                )}
+            </SubContainer>
+        </Container>
+    )
 }

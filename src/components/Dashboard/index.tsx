@@ -9,7 +9,7 @@ import { Container } from "./style"
 export const Dashboard: React.FC = () => {
     return (
         <Container className="dashboard">
-            <UserProfile isFromProfile imgSize="L" />
+            <UserProfile isFromProfile imgSize="L"/>
             <SearchBar />
             <ConversationsList />
         </Container>
