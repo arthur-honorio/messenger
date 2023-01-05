@@ -5,7 +5,7 @@ import { MessageStatusIcon } from "../MessageStatusIcons"
 import { MessageItemPropsTypes } from "../../types/types"
 import { useLoggedUserStore } from "../../states/loggedUser"
 
-import { Container, MessageAndIconContainer, MessageContainer } from "./style"
+import { Container } from "./style"
 
 export const MessageItem: React.FC<MessageItemPropsTypes> = ({
     message,
@@ -33,22 +33,13 @@ export const MessageItem: React.FC<MessageItemPropsTypes> = ({
             className={`${isUserLoggedIn ? "box-logged" : "box"} ${className}`}
             isUserLoggedIn={isUserLoggedIn}
         >
-            <MessageAndIconContainer
-                className="message-and-icon-box"
-                isUserLoggedIn={isUserLoggedIn}
-            >
-                {isUserLoggedIn ? <MessageStatusIcon /> : <></>}
-                <MessageContainer
-                    className="message-box"
-                    isUserLoggedIn={isUserLoggedIn}
-                >
-                    <span>{message.content}</span>
-                    <span className="message-sent-time">
-                        {moment(message.created_at).format("HH:mm")}
-                    </span>
-                </MessageContainer>
-                {isUserLoggedIn ? <></> : <MessageStatusIcon />}
-            </MessageAndIconContainer>
+            <span>{message.content}</span>
+            <span className="message-time-status">
+                <span>{moment(message.created_at).format("HH:mm")}</span>
+                {isUserLoggedIn && (
+                    <MessageStatusIcon status={message.status} />
+                )}
+            </span>
         </Container>
     )
 }
