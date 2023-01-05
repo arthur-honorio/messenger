@@ -11,7 +11,8 @@ export const Container = styled.div<ContainerProps>`
 export const MessageAndIconContainer = styled.div<ContainerProps>`
     display: flex;
     align-items: center;
-    justify-content: ${props => (props.isUserLoggedIn ? "flex-end" : "")};
+    justify-content: flex-end;
+    flex-flow: ${props => (props.isUserLoggedIn ? "row-reverse" : "")};
     gap: 10px;
 
     width: 100%;
@@ -27,7 +28,7 @@ export const MessageContainer = styled.div<ContainerProps>`
     width: fit-content;
     min-width: 100px;
     max-width: 50%;
-    padding: 25px;
+    padding: 18px 25px;
 
     color: ${props => (props.isUserLoggedIn ? "white" : "black")};
     background-color: ${props =>

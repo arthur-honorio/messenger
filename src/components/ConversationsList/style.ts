@@ -25,6 +25,11 @@ export const SubContainer = styled.ul<ContainerProps>`
         margin-bottom: 10px;
     }
 
+    .contacts-list-item,
+    .conversations-list-item {
+        cursor: pointer;
+    }
+
     .contacts-list-item {
         list-style: none;
         height: 100%;

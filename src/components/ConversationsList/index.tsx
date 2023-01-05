@@ -38,6 +38,7 @@ export const ConversationsList: React.FC = () => {
                         <li
                             className="conversation-list-li"
                             onClick={() => handleSetSelectedContact(contact)}
+                            key={contact.uid}
                         >
                             <UserDetails
                                 className="conversation-list-item"
@@ -59,12 +60,12 @@ export const ConversationsList: React.FC = () => {
                         <li
                             className="contacts-list-li"
                             onClick={() => handleSetSelectedContact(contact)}
+                            key={contact.uid}
                         >
                             <UserDetails
-                                className="conversation-list-item"
+                                className="contacts-list-item"
                                 imgSize="S"
                                 user={contact}
-                                key={contact.uid}
                             />
                         </li>
                     ))

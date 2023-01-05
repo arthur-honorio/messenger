@@ -120,6 +120,7 @@ export type MessagePropsTypes = {
 
 export type MessageItemPropsTypes = {
     message: MessagePropsTypes
+    className: string
 }
 
 export type MessagesListPropsTypes = {

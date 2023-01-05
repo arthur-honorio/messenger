@@ -1,12 +1,18 @@
 import React, { useState } from "react"
 import { AddFile } from "../AddFile"
 import { IoAdd, IoMic, IoSendSharp } from "react-icons/io5"
-import { arrayUnion, Timestamp } from "firebase/firestore"
+import { arrayUnion } from "firebase/firestore"
 import { nanoid } from "nanoid"
 import { Container } from "./style"
 import { useLoggedUserStore } from "../../states/loggedUser"
 import { useContactsStore } from "../../states/contacts"
-import { createDocument, getDocument, updateDocument } from "../../firebase/firestoreFunctions"
+import {
+    createDocument,
+    getDocument,
+    updateDocument,
+} from "../../firebase/firestoreFunctions"
+
+import moment from "moment"
 
 export const MessageInput: React.FC = () => {
     const [files, setFiles] = useState<string[]>([])
@@ -36,13 +42,15 @@ export const MessageInput: React.FC = () => {
                                 uid: nanoid(),
                                 status: "sent",
                                 type: "text",
-                                created_at: Timestamp,
+                                created_at: moment().valueOf(),
+                                from: loggedUser.uid,
                             },
                         ],
                         lastMessage: {
                             content: message.substring(0, 30),
                             type: "text",
-                            created_at: Timestamp,
+                            created_at: moment().valueOf(),
+                            from: loggedUser.uid,
                         },
                     },
                     chatId
@@ -56,12 +64,14 @@ export const MessageInput: React.FC = () => {
                             content: message,
                             status: "sent",
                             type: "text",
-                            created_at: Timestamp,
+                            created_at: moment().valueOf(),
+                            from: loggedUser.uid,
                         }),
                         lastMessage: {
                             content: message.substring(0, 30),
                             type: "text",
-                            created_at: Timestamp,
+                            created_at: moment().valueOf(),
+                            from: loggedUser.uid,
                         },
                     },
                     chatId

@@ -13,7 +13,7 @@ import {
 } from "firebase/firestore"
 import { app } from "./firebaseConfig"
 
-const db = getFirestore(app)
+export const db = getFirestore(app)
 
 export const documentRef = async (collection: string, id: string) => {
     return doc(db, collection, id)
@@ -38,7 +38,7 @@ export const getRealtimeData = (
 ) => {
     onSnapshot(doc(db, collection, uid), doc => {
         const data = doc.data()
-        if (data && Object.keys(data).length) callback(data)
+        if (data?.conversation?.length) callback(data?.conversation)
     })
 }
 
