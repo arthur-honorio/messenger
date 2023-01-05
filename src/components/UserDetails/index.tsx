@@ -9,9 +9,10 @@ export const UserDetails: React.FC<UserDetailsTypes> = ({
     imgSize,
     user,
     isFromProfile,
+    className
 }) => {
     return (
-        <Container className="user-details">
+        <Container className={className}>
             <UserImageAndStatus imageSize={imgSize} user={user} />
             <UserInfo user={user} isFromProfile={isFromProfile} />
         </Container>

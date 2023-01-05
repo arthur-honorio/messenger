@@ -14,15 +14,15 @@ export const Container = styled.div<ContainerPropsTypes>`
 
 export const UserStatus = styled.div<UserStatusPropsTypes>`
     width: ${props =>
-        props.size === "L" ? "20px" : props.size === "M" ? "18px" : "10px"};
+        props.size === "L" ? "20px" : props.size === "M" ? "18px" : "14px"};
     height: ${props =>
-        props.size === "L" ? "20px" : props.size === "M" ? "18px" : "10px"};
+        props.size === "L" ? "20px" : props.size === "M" ? "18px" : "14px"};
     background: ${props => (props.status === "online" ? "green" : "red")};
+    border: 2px solid white;
     border-radius: 100%;
     position: absolute;
-    right: 1px;
-    bottom: 1px;
-    border: 2px solid white;
+    right: -5px;
+    bottom: -1px;
 `
 
 export const UserImage = styled.img<UserImagePropsTypes>`
