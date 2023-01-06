@@ -9,7 +9,6 @@ import {
     where,
     getDocs,
     onSnapshot,
-    DocumentData,
 } from "firebase/firestore"
 import { app } from "./firebaseConfig"
 
@@ -32,13 +31,19 @@ export const getDocument = async (collection: string, id: string) => {
 }
 
 export const getRealtimeData = (
-    callback: (data: DocumentData) => void,
+    callback: (data: any) => void,
     collection: string,
-    uid: string
+    uid?: string
 ) => {
-    onSnapshot(doc(db, collection, uid), doc => {
+    if (uid) {
+        return onSnapshot(doc(db, collection, uid), doc => {
+            const data = doc.data()
+            callback(data)
+        })
+    }
+    return onSnapshot(doc(db, collection, "*"), doc => {
         const data = doc.data()
-        if (data?.conversation?.length) callback(data?.conversation)
+        callback(data)
     })
 }
 
