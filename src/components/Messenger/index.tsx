@@ -7,13 +7,26 @@ import { useContactsStore } from "../../states/contacts"
 import { useLoggedUserStore } from "../../states/loggedUser"
 import { NoChatSelected } from "../NoChatSelected"
 import { getOnlineUser } from "../../firebase/authenticationFunctions"
+import { Unsubscribe } from "firebase/firestore"
+import { getRealtimeData } from "../../firebase/firestoreFunctions"
 
 export const Messenger: React.FC = () => {
-    const { loggedUser } = useLoggedUserStore(state => state)
     const [loading, setLoading] = useState<boolean>(false)
+    const { loggedUser, setLoggedUser } = useLoggedUserStore(state => state)
+    const { setContacts } = useContactsStore(state => state)
 
     useEffect(() => {
         getOnlineUser(setLoading)
+        let unsub: null | Unsubscribe | void = null
+        if (loggedUser) {
+            unsub = getRealtimeData(setLoggedUser, "users", loggedUser.uid)
+            setContacts(loggedUser.contacts)
+        }
+        if (unsub) {
+            return () => {
+                if (unsub) unsub()
+            }
+        }
     }, [])
 
     const { selectedContact, contacts } = useContactsStore(state => state)

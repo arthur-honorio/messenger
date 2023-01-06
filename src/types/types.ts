@@ -93,11 +93,12 @@ export type userBasePropsTypes = {
 export type userPropsTypes = userBasePropsTypes | DocumentData
 
 export interface contactPropsTypes extends userBasePropsTypes {
-    conversationId?: string
-    lastMessage?: {
+    message: {
+        conversationId: string
         content: string
+        created_at: number
+        status: string
         type: string
-        date: string
     }
 }
 
@@ -116,6 +117,7 @@ export type MessagePropsTypes = {
     status: string
     type: "audio" | "video" | "text" | "file" | "image"
     from: string
+    conversationId: string
 }
 
 export type MessageItemPropsTypes = {
@@ -132,4 +134,20 @@ export type contactsStorePropsTypes = {
     setContacts: (contacts: contactPropsTypes[]) => void
     selectedContact: contactPropsTypes | null
     setSelectedContact: (contact: contactPropsTypes) => void
+}
+
+export type LastMessagePropsTypes = {
+    message: {
+        content: string
+        created_at: number
+        status: string
+        type: string
+        conversationId: string
+    }
+    userInfo: {
+        displayName: string
+        photoURL: string
+        email: string
+        uid: string
+    }
 }

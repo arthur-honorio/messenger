@@ -16,7 +16,7 @@ export const uploadFiles = (file: any, callback: (url: string) => void) => {
     uploadTask.on(
         "state_changed",
         snapshot => {
-            console.log(snapshot)
+            // console.log(snapshot)
         },
         err => {
             console.log(err)

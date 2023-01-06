@@ -1,8 +1,9 @@
-import { doc, DocumentData, onSnapshot } from "firebase/firestore"
+import { DocumentData } from "firebase/firestore"
 import React, { useEffect, useState } from "react"
-import { db } from "../../firebase/firestoreFunctions"
+import { getRealtimeData } from "../../firebase/firestoreFunctions"
 import { useContactsStore } from "../../states/contacts"
 import { MessagePropsTypes, MessagesListPropsTypes } from "../../types/types"
+import { getRealtimeMessages } from "../Conversation"
 import { MessageItem } from "../MessageItem"
 
 import { Container } from "./style"
@@ -12,15 +13,13 @@ export const MessagesList: React.FC<MessagesListPropsTypes> = () => {
     const [messages, setMessages] = useState<DocumentData>([])
 
     useEffect(() => {
-        selectedContact?.conversationId &&
-            onSnapshot(
-                doc(db, "messages", selectedContact?.conversationId),
-                doc => {
-                    const data = doc.data()
-                    if (data?.conversation?.length)
-                        setMessages(data?.conversation)
-                }
+        if (selectedContact?.message?.conversationId) {
+            getRealtimeData(
+                data => getRealtimeMessages(data, setMessages),
+                "messages",
+                selectedContact?.message?.conversationId
             )
+        }
     }, [selectedContact])
 
     const classCreator = (index: number, messages: MessagePropsTypes[]) => {
@@ -53,7 +52,7 @@ export const MessagesList: React.FC<MessagesListPropsTypes> = () => {
 
     return (
         <Container className="messages-list">
-            {messages.map((message: MessagePropsTypes, index: number) => (
+            {messages?.map((message: MessagePropsTypes, index: number) => (
                 <MessageItem
                     className={classCreator(
                         index,

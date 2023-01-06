@@ -1,6 +1,6 @@
 import React from "react"
 import { IoImage, IoMic } from "react-icons/io5"
-import { contactPropsTypes } from "../../types/types"
+import { contactPropsTypes, LastMessagePropsTypes } from "../../types/types"
 
 import { Container } from "./style"
 
@@ -8,7 +8,7 @@ export const UserInfo: React.FC<{
     user: contactPropsTypes
     isFromProfile?: boolean
 }> = ({ user, isFromProfile }) => {
-    function getMessageStatus(lastMessage: contactPropsTypes["lastMessage"]) {
+    function getMessageStatus(lastMessage: LastMessagePropsTypes["message"]) {
         switch (lastMessage?.type) {
             case "image":
                 return (
@@ -30,12 +30,12 @@ export const UserInfo: React.FC<{
     }
     return (
         <Container className="user-info">
-            <h5>{user.displayName}</h5>
+            <h5>{user.displayName || user.email.split("@")[0]}</h5>
             <h6>
                 {isFromProfile
                     ? user?.position || ""
-                    : user?.lastMessage
-                    ? getMessageStatus(user?.lastMessage)
+                    : user?.message
+                    ? getMessageStatus(user?.message)
                     : user?.position || ""}
             </h6>
         </Container>

@@ -1,6 +1,7 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { IoPerson } from "react-icons/io5"
-import { UserImageAndStatusProps } from "../../types/types"
+import { getRealtimeData } from "../../firebase/firestoreFunctions"
+import { UserImageAndStatusProps, userPropsTypes } from "../../types/types"
 
 import { Container, UserStatus, UserImage, UserNoImage } from "./style"
 
@@ -9,6 +10,16 @@ export const UserImageAndStatus: React.FC<UserImageAndStatusProps> = ({
     onClick,
     user,
 }) => {
+    const [userStatus, setUserStatus] = useState(undefined)
+
+    const setUserStatusRealtime = (data: userPropsTypes) => {
+        setUserStatus(data.status)
+    }
+
+    useEffect(() => {
+        getRealtimeData(setUserStatusRealtime, "users", user.uid)
+    }, [])
+
     return (
         <Container
             className="user-image-and-status"
@@ -23,7 +34,7 @@ export const UserImageAndStatus: React.FC<UserImageAndStatusProps> = ({
                 </UserNoImage>
             )}
 
-            <UserStatus size={imageSize} status={user.status} />
+            <UserStatus size={imageSize} status={userStatus} />
         </Container>
     )
 }

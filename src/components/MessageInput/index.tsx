@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useRef } from "react"
 import { AddFile } from "../AddFile"
 import { IoAdd, IoMic, IoSendSharp } from "react-icons/io5"
 import { arrayUnion } from "firebase/firestore"
@@ -20,62 +20,126 @@ export const MessageInput: React.FC = () => {
     const [showAddFile, setShowAddFile] = useState(false)
     const { loggedUser } = useLoggedUserStore(state => state)
     const { selectedContact } = useContactsStore(state => state)
+    const inputRef = useRef<HTMLInputElement>(null)
 
     const handleHideAddFile = (showAddFile: boolean) => {
         setShowAddFile(showAddFile)
     }
 
-    const handleSendMessage = async () => {
-        if (loggedUser && selectedContact) {
+    const handleSendMessage = async (type: string) => {
+        if (loggedUser && selectedContact && message) {
             const chatId =
                 loggedUser.uid > selectedContact.uid
                     ? loggedUser.uid + selectedContact.uid
                     : selectedContact.uid + loggedUser.uid
             const messages = await getDocument("messages", chatId)
-            if (!messages)
-                createDocument(
-                    "messages",
-                    {
-                        conversation: [
-                            {
-                                content: message,
+            const timestamp = moment().valueOf()
+            try {
+                if (!messages?.conversation?.length) {
+                    createDocument(
+                        "messages",
+                        {
+                            conversation: [
+                                {
+                                    content: message,
+                                    uid: nanoid(),
+                                    status: "sent",
+                                    type,
+                                    created_at: timestamp,
+                                    from: loggedUser.uid,
+                                },
+                            ],
+                        },
+                        chatId
+                    )
+                    createDocument(
+                        "last_messages",
+                        {
+                            [selectedContact.uid]: {
+                                message: {
+                                    content: message,
+                                    status: "sent",
+                                    type,
+                                    created_at: timestamp,
+                                    conversationId: chatId,
+                                },
+                                userInfo: {
+                                    photoURL: selectedContact.photoURL,
+                                    displayName: selectedContact.displayName,
+                                    email: selectedContact.email,
+                                    uid: selectedContact.uid,
+                                },
+                            },
+                        },
+                        loggedUser.uid
+                    )
+                    createDocument(
+                        "last_messages",
+                        {
+                            [loggedUser.uid]: {
+                                message: {
+                                    content: message,
+                                    status: "sent",
+                                    type,
+                                    created_at: timestamp,
+                                    conversationId: chatId,
+                                },
+                                userInfo: {
+                                    photoURL: loggedUser.photoURL,
+                                    displayName: loggedUser.displayName,
+                                    email: loggedUser.email,
+                                    uid: loggedUser.uid,
+                                },
+                            },
+                        },
+                        selectedContact.uid
+                    )
+
+                    setMessage("")
+                    if (inputRef?.current) inputRef.current.value = ""
+                } else {
+                    updateDocument(
+                        "messages",
+                        {
+                            conversation: arrayUnion({
                                 uid: nanoid(),
+                                content: message,
                                 status: "sent",
                                 type: "text",
-                                created_at: moment().valueOf(),
+                                created_at: timestamp,
                                 from: loggedUser.uid,
-                            },
-                        ],
-                        lastMessage: {
-                            content: message.substring(0, 30),
-                            type: "text",
-                            created_at: moment().valueOf(),
-                            from: loggedUser.uid,
+                            }),
                         },
-                    },
-                    chatId
-                )
-            else {
-                updateDocument(
-                    "messages",
-                    {
-                        conversation: arrayUnion({
-                            uid: nanoid(),
-                            content: message,
-                            status: "sent",
-                            type: "text",
-                            created_at: moment().valueOf(),
-                            from: loggedUser.uid,
-                        }),
-                        lastMessage: {
-                            content: message.substring(0, 30),
-                            type: "text",
-                            created_at: moment().valueOf(),
-                            from: loggedUser.uid,
+                        chatId
+                    )
+                    updateDocument(
+                        "last_messages",
+                        {
+                            [`${selectedContact.uid}.message.content`]: message,
+                            [`${selectedContact.uid}.message.status`]: "sent",
+                            [`${selectedContact.uid}.message.type`]: type,
+                            [`${selectedContact.uid}.message.created_at`]:
+                                timestamp,
                         },
-                    },
-                    chatId
-                )
+                        loggedUser.uid
+                    )
+                    updateDocument(
+                        "last_messages",
+                        {
+                            [`${loggedUser.uid}.message.content`]: message,
+                            [`${loggedUser.uid}.message.status`]: "sent",
+                            [`${loggedUser.uid}.message.type`]: type,
+                            [`${loggedUser.uid}.message.created_at`]: timestamp,
+                        },
+                        selectedContact.uid
+                    )
+                    setMessage("")
+                    if (inputRef?.current) inputRef.current.value = ""
+                }
+            } catch (err: any) {
+                console.log(err)
+                console.log(err.message)
+                console.log(Object.entries(err))
             }
         }
     }
@@ -83,11 +147,15 @@ export const MessageInput: React.FC = () => {
     return (
         <Container className="message-input">
             <input
+                ref={inputRef}
                 type="text"
                 placeholder="Mensagem"
                 onChange={e => setMessage(e.target.value)}
+                onKeyDown={e => {
+                    if (e.key === "Enter") handleSendMessage("text")
+                }}
             />
-            <IoSendSharp onClick={handleSendMessage} />
+            <IoSendSharp onClick={() => handleSendMessage("text")} />
             <IoMic onClick={() => {}} />
             <IoAdd onClick={() => setShowAddFile(true)} />
             <AddFile

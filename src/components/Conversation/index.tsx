@@ -22,7 +22,11 @@ export const Conversation: React.FC = () => {
                     ? selectedContact.uid + loggedUser.uid
                     : loggedUser.uid + selectedContact.uid
 
-            getRealtimeData(setMessages, "conversations", converstionId)
+            getRealtimeData(
+                data => getRealtimeMessages(data, setMessages),
+                "messages",
+                converstionId
+            )
         }
     }, [selectedContact, loggedUser])
 
@@ -40,4 +44,11 @@ export const Conversation: React.FC = () => {
             <MessageInput />
         </Container>
     )
+}
+
+export const getRealtimeMessages = (
+    data: any,
+    callback: (arg: any) => void
+) => {
+    data?.conversation && callback(data.conversation)
 }
