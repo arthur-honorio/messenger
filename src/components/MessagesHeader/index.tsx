@@ -14,7 +14,7 @@ export const MessagesHeader: React.FC = () => {
                     className="selected-contact"
                     user={selectedContact}
                     imgSize="M"
-                    isFromProfile={false}
+                    isFromProfile
                 />
             )}
             <MessagesHeaderButtons className="messages-header-buttons">

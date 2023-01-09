@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { AddFile } from "../AddFile"
 import { IoAdd, IoMic, IoSendSharp } from "react-icons/io5"
 import { arrayUnion } from "firebase/firestore"
@@ -18,12 +18,56 @@ export const MessageInput: React.FC = () => {
     const [files, setFiles] = useState<string[]>([])
     const [message, setMessage] = useState("")
     const [showAddFile, setShowAddFile] = useState(false)
+    const [isTyping, setIsTyping] = useState(false)
     const { loggedUser } = useLoggedUserStore(state => state)
     const { selectedContact } = useContactsStore(state => state)
     const inputRef = useRef<HTMLInputElement>(null)
 
     const handleHideAddFile = (showAddFile: boolean) => {
         setShowAddFile(showAddFile)
+    }
+
+    useEffect(() => {
+        if (message.length && !isTyping) {
+            setIsTyping(true)
+            setUserActionStatus()
+        } else if (!message && isTyping) {
+            setIsTyping(false)
+            setUserActionStatus("remove-typing")
+        }
+    }, [message, isTyping])
+
+    const setUserActionStatus = async (action: string = "add-typing") => {
+        if (loggedUser && selectedContact) {
+            const messages = await getDocument("last_messages", loggedUser.uid)
+            if (messages && messages[selectedContact.uid]) {
+                let statusAction = messages[selectedContact.uid].message.status
+                switch (action) {
+                    case "remove-typing":
+                        statusAction = statusAction.replace(/-typing/g, "")
+                        break
+                    case "add-recording":
+                        if (!statusAction.includes("-recording"))
+                            statusAction += "-recording"
+                        break
+                    case "remove-recording":
+                        statusAction = statusAction.replace(/-recording/g, "")
+                        break
+                    default:
+                        if (!statusAction.includes("-typing"))
+                            statusAction += "-typing"
+                        break
+                }
+
+                updateDocument(
+                    "last_messages",
+                    {
+                        [`${loggedUser.uid}.message.status`]: statusAction,
+                    },
+                    selectedContact.uid
+                )
+            }
+        }
     }
 
     const handleSendMessage = async (type: string) => {
@@ -62,6 +106,7 @@ export const MessageInput: React.FC = () => {
                                     type,
                                     created_at: timestamp,
                                     conversationId: chatId,
+                                    from: loggedUser.uid,
                                 },
                                 userInfo: {
                                     photoURL: selectedContact.photoURL,
@@ -83,6 +128,7 @@ export const MessageInput: React.FC = () => {
                                     type,
                                     created_at: timestamp,
                                     conversationId: chatId,
+                                    from: loggedUser.uid,
                                 },
                                 userInfo: {
                                     photoURL: loggedUser.photoURL,
@@ -150,7 +196,11 @@ export const MessageInput: React.FC = () => {
                 ref={inputRef}
                 type="text"
                 placeholder="Mensagem"
-                onChange={e => setMessage(e.target.value)}
+                onChange={e => {
+                    e.target.value = e.target.value.trimStart()
+                    const value = e.target.value
+                    setMessage(value)
+                }}
                 onKeyDown={e => {
                     if (e.key === "Enter") handleSendMessage("text")
                 }}

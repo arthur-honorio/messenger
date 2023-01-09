@@ -99,6 +99,7 @@ export interface contactPropsTypes extends userBasePropsTypes {
         created_at: number
         status: string
         type: string
+        from: string
     }
 }
 
@@ -143,6 +144,7 @@ export type LastMessagePropsTypes = {
         status: string
         type: string
         conversationId: string
+        from: string
     }
     userInfo: {
         displayName: string
