@@ -7,6 +7,7 @@ import { MessagePropsTypes } from "../../types/types"
 import { MessageInput } from "../MessageInput"
 import { MessagesHeader } from "../MessagesHeader"
 import { MessagesList } from "../MessagesList"
+import moment from "moment"
 
 import { Container } from "./style"
 
@@ -47,8 +48,45 @@ export const Conversation: React.FC = () => {
 }
 
 export const getRealtimeMessages = (
-    data: any,
+    data: DocumentData,
     callback: (arg: any) => void
 ) => {
-    data?.conversation && callback(data.conversation)
+    if (data) {
+        const resultMessage: DocumentData[] = []
+        Object.values(data)
+            .sort((a, b) => a.created_at - b.created_at)
+            .forEach((message, index, array) => {
+                const isToday = moment(message.created_at).isSame(
+                    moment(),
+                    "day"
+                )
+                const isYesterday =
+                    moment(message.created_at).diff(moment(), "day") === -1
+                if (
+                    index > 0 &&
+                    !moment(array[index - 1].created_at).isSame(
+                        moment(message.created_at),
+                        "day"
+                    )
+                ) {
+                    resultMessage.push(
+                        {
+                            divisor: `${moment(message.created_at).format(
+                                `${
+                                    isToday
+                                        ? "[Hoje]"
+                                        : isYesterday
+                                        ? "[Ontem]"
+                                        : "DD MMMM"
+                                }`
+                            )}`,
+                        },
+                        message
+                    )
+                } else {
+                    resultMessage.push(message)
+                }
+            })
+        callback(resultMessage)
+    }
 }

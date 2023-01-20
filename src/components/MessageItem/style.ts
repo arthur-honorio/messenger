@@ -4,11 +4,38 @@ type ContainerProps = {
     isUserLoggedIn: boolean
 }
 
+export const MessageDivisor = styled.span`
+    width: 100%;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    display: inline-block;
+    text-align: center;
+    font-size: 14px;
+    color: gray;
 
+    &::before,
+    &::after{
+        content: "";
+        display: inline-block;
+        width: 30%;
+        height: 1px;
+        background: linear-gradient(90deg,transparent,lightgray);
+        vertical-align: center;
+        margin: 5px 40px;
+    }
+
+    &::after {
+        background: linear-gradient(-90deg,transparent,lightgray);
+
+    }
+`
 export const Container = styled.div<ContainerProps>`
     display: flex;
     align-items: center;
-    justify-content: ${props => (props.isUserLoggedIn ? "flex-end" : "flex-start")};
+    justify-content: ${props =>
+        props.isUserLoggedIn ? "flex-end" : "flex-start"};
     width: 100%;
     gap: 20px;
 

@@ -5,13 +5,25 @@ import { MessageStatusIcon } from "../MessageStatusIcons"
 import { MessageItemPropsTypes } from "../../types/types"
 import { useLoggedUserStore } from "../../states/loggedUser"
 
-import { Container } from "./style"
+import { Container, MessageDivisor } from "./style"
 
 export const MessageItem: React.FC<MessageItemPropsTypes> = ({
     message,
     className,
+    key,
 }) => {
     const { loggedUser } = useLoggedUserStore(state => state)
+
+    if (message?.divisor) {
+        return (
+            <>
+                <MessageDivisor className="date-divisor">
+                    {message?.divisor}
+                </MessageDivisor>
+            </>
+        )
+    }
+
     const isUserLoggedIn = message.from === loggedUser?.uid
 
     // {message.type !== "text" ? (
@@ -32,6 +44,7 @@ export const MessageItem: React.FC<MessageItemPropsTypes> = ({
         <Container
             className={`${isUserLoggedIn ? "box-logged" : "box"} ${className}`}
             isUserLoggedIn={isUserLoggedIn}
+            key={key}
         >
             <span>{message.content}</span>
             <span className="message-time-status">
