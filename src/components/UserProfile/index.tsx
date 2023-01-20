@@ -49,11 +49,11 @@ export const UserProfile: React.FC<UserProfileContainerProps> = ({
             )}
             {isFromProfile ? (
                 <>
-                    <AddContactModal
-                        show={addContact}
-                        setShow={setAddContact}
-                    />
                     <UserProfileButtonsContainer className="user-buttons">
+                        <AddContactModal
+                            show={addContact}
+                            setShow={setAddContact}
+                        />
                         <Tooltip title="Adicionar contato">
                             <UserProfileButton
                                 className="add-contacts"

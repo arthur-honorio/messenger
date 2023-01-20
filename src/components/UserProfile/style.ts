@@ -2,19 +2,16 @@ import styled from "styled-components"
 
 export const Container = styled.header<{ isFromProfile?: boolean }>`
     width: 100%;
-    display: flex;
+    display: grid;
     align-items: center;
     justify-content: space-between;
+    grid-template-columns: 68% 30%;
 
     .add-contacts,
     .add-contacts svg {
         color: orchid;
-        width: 60px;
+        width: fit-content;
         height: 30px;
-    }
-
-    .add-contacts {
-        margin-left: 100px;
     }
 
     .add-contacts::after {
@@ -24,6 +21,7 @@ export const Container = styled.header<{ isFromProfile?: boolean }>`
         height: 45px;
         background-color: orchid;
         align-self: center;
+        margin-left: 10px;
     }
 `
 
@@ -32,7 +30,6 @@ export const UserProfileButton = styled.div<{
 }>`
     display: flex;
     justify-content: center;
-    gap: 10px;
     width: 25px;
     height: 25px;
 
@@ -44,6 +41,7 @@ export const UserProfileButton = styled.div<{
 
 export const UserProfileButtonsContainer = styled.div`
     display: flex;
-    gap: 15px;
+    gap: 10px;
+    justify-content: space-between;
     align-items: center;
 `
