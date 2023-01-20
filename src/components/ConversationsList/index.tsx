@@ -50,13 +50,22 @@ export const ConversationsList: React.FC = () => {
                     chatList?.map(contact => {
                         return (
                             <li
-                                className="conversation-list-li"
-                                onClick={() =>
+                                className={`conversation-list-li${
+                                    selectedConversation ===
+                                    contact.userInfo.uid
+                                        ? " selected"
+                                        : ""
+                                }`}
+                                onClick={e => {
                                     handleSetSelectedContact({
                                         ...contact.userInfo,
                                         message: contact.message,
                                     })
-                                }
+                                    setSelectedConversation(
+                                        contact.userInfo.uid
+                                    )
+                                }}
+                                key={contact.userInfo.uid}
                             >
                                 <UserDetails
                                     className="conversation-list-item"

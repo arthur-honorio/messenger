@@ -26,7 +26,7 @@ export const SubContainer = styled.ul<ContainerProps>`
     }
 
     .contacts-list-item,
-    .conversations-list-item {
+    .conversation-list-item {
         cursor: pointer;
     }
 
@@ -38,5 +38,17 @@ export const SubContainer = styled.ul<ContainerProps>`
 
     .contacts-list-item + .contacts-list-item {
         margin-top: 10px;
+    }
+
+    .conversation-list-li {
+        padding: 10px 15px;
+        border-radius: 10px;
+    }
+    .conversation-list-li.selected {
+        background: linear-gradient(
+            90deg,
+            rgba(200, 0, 200, 0.05) 10%,
+            rgba(200, 0, 200, 0.1) 100%
+        );
     }
 `
