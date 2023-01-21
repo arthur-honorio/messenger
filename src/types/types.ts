@@ -8,7 +8,7 @@ export type UserProfileContainerProps = {
 }
 
 export interface UserDetailsTypes extends UserProfileContainerProps {
-    user: contactPropsTypes
+    user: ContactPropsTypes
     className: string
 }
 
@@ -87,12 +87,12 @@ export type userBasePropsTypes = {
     photoURL?: string
     position?: string
     status?: string | React.ReactNode
-    contacts?: contactPropsTypes[]
+    contacts?: ContactPropsTypes[]
 }
 
 export type userPropsTypes = userBasePropsTypes | DocumentData
 
-export interface contactPropsTypes extends userBasePropsTypes {
+export interface ContactPropsTypes extends userBasePropsTypes {
     message: {
         conversationId: string
         content: string
@@ -131,10 +131,10 @@ export type MessagesListPropsTypes = {
 }
 
 export type contactsStorePropsTypes = {
-    contacts: contactPropsTypes[]
-    setContacts: (contacts: contactPropsTypes[]) => void
-    selectedContact: contactPropsTypes | null
-    setSelectedContact: (contact: contactPropsTypes) => void
+    contacts: ContactPropsTypes[]
+    setContacts: (contacts: ContactPropsTypes[]) => void
+    selectedContact: ContactPropsTypes | null
+    setSelectedContact: (contact: ContactPropsTypes | null) => void
 }
 
 export type LastMessagePropsTypes = {

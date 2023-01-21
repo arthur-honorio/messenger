@@ -15,7 +15,7 @@ import {
     UserProfileButton,
     UserProfileButtonsContainer,
 } from "./style"
-import { contactPropsTypes, UserProfileContainerProps } from "../../types/types"
+import { ContactPropsTypes, UserProfileContainerProps } from "../../types/types"
 
 export const UserProfile: React.FC<UserProfileContainerProps> = ({
     isFromProfile,
@@ -43,7 +43,7 @@ export const UserProfile: React.FC<UserProfileContainerProps> = ({
                 <UserDetails
                     className="user-details"
                     imgSize="L"
-                    user={loggedUser as contactPropsTypes}
+                    user={loggedUser as ContactPropsTypes}
                     isFromProfile
                 />
             )}

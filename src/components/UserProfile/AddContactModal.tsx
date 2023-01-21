@@ -13,7 +13,7 @@ import { ActionButton } from "../ActionButton"
 import { IoCloseCircleSharp } from "react-icons/io5"
 import { ModalContainer } from "../../style/modalStyle"
 import { useContactsStore } from "../../states/contacts"
-import { contactPropsTypes } from "../../types/types"
+import { ContactPropsTypes } from "../../types/types"
 
 type AddContactModalProps = {
     show: boolean
@@ -43,7 +43,7 @@ export const AddContactModal: React.FC<AddContactModalProps> = ({
         const data = new FormData(target)
         const { email } = Object.fromEntries(data.entries())
         const searchedContact = loggedUser?.contacts.find(
-            (contact: contactPropsTypes) => contact.email === email
+            (contact: ContactPropsTypes) => contact.email === email
         )
 
         try {

@@ -1,10 +1,10 @@
 import React, { useState } from "react"
-import { contactPropsTypes } from "../../types/types"
+import { ContactPropsTypes } from "../../types/types"
 import { AddContactModal } from "../UserProfile/AddContactModal"
 
 import { Container } from "./styles"
 
-export const NoChatSelected: React.FC<{ contacts: contactPropsTypes[] }> = ({
+export const NoChatSelected: React.FC<{ contacts: ContactPropsTypes[] }> = ({
     contacts,
 }) => {
     const [showAddContact, setShowAddContact] = useState(false)

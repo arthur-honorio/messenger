@@ -1,12 +1,12 @@
 import moment from "moment"
 import React from "react"
 import { IoCheckmark, IoCheckmarkDone, IoImage, IoMic } from "react-icons/io5"
-import { contactPropsTypes, LastMessagePropsTypes } from "../../types/types"
+import { ContactPropsTypes, LastMessagePropsTypes } from "../../types/types"
 
 import { Container } from "./style"
 
 export const UserInfo: React.FC<{
-    user: contactPropsTypes
+    user: ContactPropsTypes
     isFromProfile?: boolean
 }> = ({ user, isFromProfile }) => {
     const getMessageStatus = (status: string) => {

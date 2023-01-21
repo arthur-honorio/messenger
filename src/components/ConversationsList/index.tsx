@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { getRealtimeData } from "../../firebase/firestoreFunctions"
 import { useContactsStore } from "../../states/contacts"
 import { useLoggedUserStore } from "../../states/loggedUser"
-import { contactPropsTypes, LastMessagePropsTypes } from "../../types/types"
+import { ContactPropsTypes, LastMessagePropsTypes } from "../../types/types"
 import { UserDetails } from "../UserDetails"
 
 import { Container, SubContainer } from "./style"
@@ -38,7 +38,7 @@ export const ConversationsList: React.FC = () => {
         }
     }, [loggedUser])
 
-    function handleSetSelectedContact(contact: contactPropsTypes) {
+    function handleSetSelectedContact(contact: ContactPropsTypes) {
         setSelectedContact(contact)
     }
 
