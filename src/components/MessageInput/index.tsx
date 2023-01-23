@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import { AddFile } from "../AddFile"
 import { IoAdd, IoMic, IoSendSharp } from "react-icons/io5"
-import { arrayUnion } from "firebase/firestore"
-import { nanoid } from "nanoid"
 import { Container } from "./style"
 import { useLoggedUserStore } from "../../states/loggedUser"
 import { useContactsStore } from "../../states/contacts"
@@ -11,7 +9,6 @@ import {
     getDocument,
     updateDocument,
 } from "../../firebase/firestoreFunctions"
-
 import moment from "moment"
 
 export const MessageInput: React.FC = () => {
@@ -33,36 +30,18 @@ export const MessageInput: React.FC = () => {
             setUserActionStatus()
         } else if (!message && isTyping) {
             setIsTyping(false)
-            setUserActionStatus("remove-typing")
+            setUserActionStatus(null)
         }
     }, [message, isTyping])
 
-    const setUserActionStatus = async (action: string = "add-typing") => {
+    const setUserActionStatus = async (action: null | string = "typing") => {
         if (loggedUser && selectedContact) {
             const messages = await getDocument("last_messages", loggedUser.uid)
             if (messages && messages[selectedContact.uid]) {
-                let statusAction = messages[selectedContact.uid].message.status
-                switch (action) {
-                    case "remove-typing":
-                        statusAction = statusAction.replace(/-typing/g, "")
-                        break
-                    case "add-recording":
-                        if (!statusAction.includes("-recording"))
-                            statusAction += "-recording"
-                        break
-                    case "remove-recording":
-                        statusAction = statusAction.replace(/-recording/g, "")
-                        break
-                    default:
-                        if (!statusAction.includes("-typing"))
-                            statusAction += "-typing"
-                        break
-                }
-
                 updateDocument(
                     "last_messages",
                     {
-                        [`${loggedUser.uid}.message.status`]: statusAction,
+                        [`${loggedUser.uid}.message.action`]: action,
                     },
                     selectedContact.uid
                 )
@@ -78,21 +57,19 @@ export const MessageInput: React.FC = () => {
                     : selectedContact.uid + loggedUser.uid
             const messages = await getDocument("messages", chatId)
             const timestamp = moment().valueOf()
+            console.log(messages)
             try {
-                if (!messages?.conversation?.length) {
+                if (!messages) {
                     createDocument(
                         "messages",
                         {
-                            conversation: [
-                                {
-                                    content: message,
-                                    uid: nanoid(),
-                                    status: "sent",
-                                    type,
-                                    created_at: timestamp,
-                                    from: loggedUser.uid,
-                                },
-                            ],
+                            [timestamp]: {
+                                content: message,
+                                status: "sent",
+                                type,
+                                created_at: timestamp,
+                                from: loggedUser.uid,
+                            },
                         },
                         chatId
                     )
@@ -107,6 +84,7 @@ export const MessageInput: React.FC = () => {
                                     created_at: timestamp,
                                     conversationId: chatId,
                                     from: loggedUser.uid,
+                                    action: "",
                                 },
                                 userInfo: {
                                     photoURL: selectedContact.photoURL,
@@ -129,6 +107,7 @@ export const MessageInput: React.FC = () => {
                                     created_at: timestamp,
                                     conversationId: chatId,
                                     from: loggedUser.uid,
+                                    action: "",
                                 },
                                 userInfo: {
                                     photoURL: loggedUser.photoURL,
@@ -147,14 +126,13 @@ export const MessageInput: React.FC = () => {
                     updateDocument(
                         "messages",
                         {
-                            conversation: arrayUnion({
-                                uid: nanoid(),
+                            [timestamp]: {
                                 content: message,
                                 status: "sent",
                                 type: "text",
                                 created_at: timestamp,
                                 from: loggedUser.uid,
-                            }),
+                            },
                         },
                         chatId
                     )

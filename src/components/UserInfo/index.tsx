@@ -15,8 +15,10 @@ export const UserInfo: React.FC<{
                 return <IoCheckmark color="gray" />
             case "received":
                 return <IoCheckmarkDone color="gray" />
-            default:
+            case "read":
                 return <IoCheckmarkDone color="blue" />
+            default:
+                return <IoCheckmark color="transparent" />
         }
     }
     const getMessageByType = (
@@ -38,9 +40,9 @@ export const UserInfo: React.FC<{
                     </>
                 )
             default:
-                return lastMessage?.status?.includes("typing") ? (
+                return lastMessage?.action?.includes("typing") ? (
                     "Digitando..."
-                ) : lastMessage?.status?.includes("recording") ? (
+                ) : lastMessage?.action?.includes("recording") ? (
                     "Gravando áudio..."
                 ) : (
                     <>

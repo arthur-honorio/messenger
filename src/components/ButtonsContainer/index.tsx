@@ -1,5 +1,4 @@
-import React, { useState } from "react"
-import { signIn } from "../../firebase/authenticationFunctions"
+import React from "react"
 import { ActionButton } from "../ActionButton"
 
 import { Container } from "./style"

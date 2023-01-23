@@ -1,27 +1,12 @@
-import { DocumentData } from "firebase/firestore"
-import React, { useEffect, useState } from "react"
-import { getRealtimeData } from "../../firebase/firestoreFunctions"
-import { useContactsStore } from "../../states/contacts"
+import React from "react"
 import { MessagePropsTypes, MessagesListPropsTypes } from "../../types/types"
-import { getRealtimeMessages } from "../Conversation"
 import { MessageItem } from "../MessageItem"
 
 import { Container } from "./style"
 
-export const MessagesList: React.FC<MessagesListPropsTypes> = () => {
-    const { selectedContact } = useContactsStore(state => state)
-    const [messages, setMessages] = useState<DocumentData>([])
-
-    useEffect(() => {
-        if (selectedContact?.message?.conversationId) {
-            getRealtimeData(
-                data => getRealtimeMessages(data, setMessages),
-                "messages",
-                selectedContact?.message?.conversationId
-            )
-        }
-    }, [selectedContact])
-
+export const MessagesList: React.FC<MessagesListPropsTypes> = ({
+    messages,
+}) => {
     const classCreator = (index: number, messages: MessagePropsTypes[]) => {
         if (
             (!messages[index - 1] && !messages[index + 1]) ||
@@ -52,15 +37,18 @@ export const MessagesList: React.FC<MessagesListPropsTypes> = () => {
 
     return (
         <Container className="messages-list">
-            {messages?.map((message: MessagePropsTypes, index: number) => (
-                <MessageItem
-                    className={classCreator(
-                        index,
-                        messages as MessagePropsTypes[]
-                    )}
-                    message={message}
-                />
-            ))}
+            {messages?.map((message: MessagePropsTypes, index: number) => {
+                return (
+                    <MessageItem
+                        key={`${message.created_at}`}
+                        className={classCreator(
+                            index,
+                            messages as MessagePropsTypes[]
+                        )}
+                        message={message}
+                    />
+                )
+            })}
         </Container>
     )
 }

@@ -88,6 +88,7 @@ export type userBasePropsTypes = {
     position?: string
     status?: string | React.ReactNode
     contacts?: ContactPropsTypes[]
+    conversationOpened?: string
 }
 
 export type userPropsTypes = userBasePropsTypes | DocumentData
@@ -100,6 +101,7 @@ export interface ContactPropsTypes extends userBasePropsTypes {
         status: string
         type: string
         from: string
+        action?: string
     }
 }
 
@@ -119,11 +121,24 @@ export type MessagePropsTypes = {
     type: "audio" | "video" | "text" | "file" | "image"
     from: string
     conversationId: string
+    divisor: string
+}
+
+interface IncompleteRawConversationTypes
+    extends Omit<MessagePropsTypes, "src" | "conversationId"> {
+    uid: string
+}
+
+export type RawConversationTypes = {
+    [x: string]: {
+        conversation: IncompleteRawConversationTypes[]
+    }
 }
 
 export type MessageItemPropsTypes = {
-    message: MessagePropsTypes
+    message: MessagePropsTypes 
     className: string
+    key: string
 }
 
 export type MessagesListPropsTypes = {
@@ -145,6 +160,7 @@ export type LastMessagePropsTypes = {
         type: string
         conversationId: string
         from: string
+        action?: string
     }
     userInfo: {
         displayName: string

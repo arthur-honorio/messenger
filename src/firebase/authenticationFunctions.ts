@@ -7,6 +7,8 @@ import { useContactsStore } from "../states/contacts"
 import { useLoggedUserStore } from "../states/loggedUser"
 import { useSnackbarStore } from "../states/snackbar"
 import {
+    ContactPropsTypes,
+    MessagePropsTypes,
     signInPropsType,
     signUpPropsType,
     userPropsTypes,
@@ -50,6 +52,66 @@ export const signIn: signInPropsType = async (
     }
 }
 
+export const updateMessagesStatus = (user: userPropsTypes) => {
+    if (user?.contacts?.length) {
+        const contacts = user.contacts
+        contacts.forEach((contact: ContactPropsTypes) => {
+            const chatId =
+                user.uid > contact.uid
+                    ? user.uid + contact.uid
+                    : contact.uid + user.uid
+            if (user) {
+                getDocument("messages", chatId).then(messages => {
+                    let updatedMessagesStatus = []
+                    if (messages) {
+                        updatedMessagesStatus = Object.values(messages)
+                            .filter(
+                                (message: MessagePropsTypes) =>
+                                    message.status === "sent" &&
+                                    message.from === contact.uid
+                            )
+                            .reduce((obj, message) => {
+                                obj[`${message.created_at}.status`] = "received"
+                                return obj
+                            }, {})
+                        if (updatedMessagesStatus.length) {
+                            updateDocument(
+                                "messages",
+                                updatedMessagesStatus,
+                                chatId
+                            )
+                        }
+                    }
+                })
+                getDocument("last_messages", user.uid).then(messages => {
+                    let updatedMessagesStatus
+                    if (messages && Object.keys(messages)?.length) {
+                        Object.entries(messages).forEach(message => {
+                            const [key, value] = message
+                            console.log(key, value)
+                            if (
+                                value.status === "sent" &&
+                                value.from === contact.uid
+                            ) {
+                                updatedMessagesStatus = {
+                                    [`${key}.message.status`]: "received",
+                                }
+                            }
+                        })
+                        if (updatedMessagesStatus) {
+                            updateDocument(
+                                "messages",
+                                updatedMessagesStatus,
+                                user.uid
+                            )
+                        }
+                    }
+                })
+            }
+        })
+    }
+}
+
 export const getOnlineUser = (loadingCallback: (arg: boolean) => void) => {
     loadingCallback(true)
     onAuthStateChanged(auth, user => {
@@ -60,6 +122,7 @@ export const getOnlineUser = (loadingCallback: (arg: boolean) => void) => {
                 setLoggedUser(userProps)
                 setContacts(userProps.contacts)
                 loadingCallback(false)
+                updateMessagesStatus(userProps)
             })
         } else {
             loadingCallback(false)

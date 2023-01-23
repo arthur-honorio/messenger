@@ -27,18 +27,18 @@ export const UserStatus = styled.div<UserStatusPropsTypes>`
 
 export const UserImage = styled.img<UserImagePropsTypes>`
     width: ${props =>
-        props.size === "L" ? "70px" : props.size === "M" ? "55px" : "40px"};
+        props.size === "L" ? "80px" : props.size === "M" ? "60px" : "50px"};
     height: ${props =>
-        props.size === "L" ? "70px" : props.size === "M" ? "55px" : "40px"};
+        props.size === "L" ? "80px" : props.size === "M" ? "60px" : "50px"};
     border-radius: 100%;
     background: orchid;
 `
 
 export const UserNoImage = styled.div<Pick<UserImagePropsTypes, "size">>`
     width: ${props =>
-        props.size === "L" ? "70px" : props.size === "M" ? "55px" : "40px"};
+        props.size === "L" ? "80px" : props.size === "M" ? "60px" : "50px"};
     height: ${props =>
-        props.size === "L" ? "70px" : props.size === "M" ? "55px" : "40px"};
+        props.size === "L" ? "80px" : props.size === "M" ? "60px" : "50px"};
     border-radius: 100%;
     background: orchid;
     display: flex;

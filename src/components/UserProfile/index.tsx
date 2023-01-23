@@ -15,17 +15,20 @@ import {
     UserProfileButton,
     UserProfileButtonsContainer,
 } from "./style"
+import { useContactsStore } from "../../states/contacts"
 import { ContactPropsTypes, UserProfileContainerProps } from "../../types/types"
 
 export const UserProfile: React.FC<UserProfileContainerProps> = ({
     isFromProfile,
 }) => {
     const { loggedUser, setLoggedUser } = useLoggedUserStore(state => state)
+    const { setSelectedContact } = useContactsStore(state => state)
     const [editUser, setEditUser] = useState(false)
     const [addContact, setAddContact] = useState(false)
 
     const handleSignOut = async () => {
         signOut(getAuth()).then(() => {
+            setSelectedContact(null)
             setLoggedUser(null)
             loggedUser &&
                 updateDocument("users", { status: " offline" }, loggedUser.uid)

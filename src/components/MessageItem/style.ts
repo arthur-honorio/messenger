@@ -4,7 +4,7 @@ type ContainerProps = {
     isUserLoggedIn: boolean
 }
 
-export const MessageDivisor = styled.span`
+export const MessageDivisor = styled.li`
     width: 100%;
     display: grid;
     align-items: center;
@@ -31,7 +31,7 @@ export const MessageDivisor = styled.span`
 
     }
 `
-export const Container = styled.div<ContainerProps>`
+export const Container = styled.li<ContainerProps>`
     display: flex;
     align-items: center;
     justify-content: ${props =>
