@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from "react"
-import { getRealtimeData } from "../../firebase/firestoreFunctions"
+import {
+    getDocument,
+    getRealtimeData,
+    updateDocument,
+} from "../../firebase/firestoreFunctions"
 import { useContactsStore } from "../../states/contacts"
 import { useLoggedUserStore } from "../../states/loggedUser"
-import { ContactPropsTypes, LastMessagePropsTypes } from "../../types/types"
+import {
+    ContactPropsTypes,
+    LastMessagePropsTypes,
+    MessagePropsTypes,
+} from "../../types/types"
 import { UserDetails } from "../UserDetails"
 
 import { Container, SubContainer } from "./style"
@@ -14,6 +22,7 @@ export const ConversationsList: React.FC = () => {
     )
     const [chatList, setChatList] = useState<LastMessagePropsTypes[] | []>([])
     const [chatUsersIds, setChatUsersIds] = useState<string[]>([])
+    const [selectedConversation, setSelectedConversation] = useState<string>("")
 
     const setInitiatedChats = (data: any) => {
         if (data) {
@@ -21,7 +30,7 @@ export const ConversationsList: React.FC = () => {
             const lastMessages: LastMessagePropsTypes[] = Object.values(data)
             const sortedMessages: LastMessagePropsTypes[] = lastMessages.sort(
                 (a: LastMessagePropsTypes, b: LastMessagePropsTypes) =>
-                    a.message.created_at - b.message.created_at
+                    a.message.created_at - b.message.created_at * -1
             )
             setChatList(sortedMessages)
         }
@@ -40,6 +49,67 @@ export const ConversationsList: React.FC = () => {
 
     function handleSetSelectedContact(contact: ContactPropsTypes) {
         setSelectedContact(contact)
+        handleMessagesStatus(contact)
+        setSelectedConversation(contact.uid)
+    }
+
+    function handleMessagesStatus(contact: ContactPropsTypes) {
+        if (loggedUser) {
+            const chatId =
+                loggedUser.uid > contact.uid
+                    ? loggedUser.uid + contact.uid
+                    : contact.uid + loggedUser.uid
+            getDocument("messages", chatId).then(messages => {
+                let updatedMessagesStatus = {}
+                if (messages) {
+                    const message: MessagePropsTypes[] = Object.values(messages)
+                    for (let i = messages.length - 1; i >= 0; i--) {
+                        if (message[i].from === contact.uid) {
+                            if (message[i].status !== "received") {
+                                break
+                            } else {
+                                updatedMessagesStatus = {
+                                    ...updatedMessagesStatus,
+                                    [`${message[i].created_at}.status`]: "read",
+                                }
+                            }
+                        } else {
+                            continue
+                        }
+                    }
+                    if (Object.keys(updatedMessagesStatus).length)
+                        updateDocument(
+                            "messages",
+                            updatedMessagesStatus,
+                            chatId
+                        )
+                }
+            })
+            getDocument("last_messages", loggedUser.uid).then(messages => {
+                if (messages) {
+                    let updatedMessagesStatus
+                    Object.entries(messages).forEach(
+                        (message: [string, MessagePropsTypes]) => {
+                            const [key, value] = message
+                            if (
+                                value.status === "received" &&
+                                value.conversationId === chatId
+                            ) {
+                                updatedMessagesStatus = {
+                                    [`${key}.message.status`]: "read",
+                                }
+                            }
+                        }
+                    )
+                    if (updatedMessagesStatus)
+                        updateDocument(
+                            "last_messages",
+                            updatedMessagesStatus,
+                            loggedUser.uid
+                        )
+                }
+            })
+        }
     }
 
     return (
@@ -61,9 +131,6 @@ export const ConversationsList: React.FC = () => {
                                         ...contact.userInfo,
                                         message: contact.message,
                                     })
-                                    setSelectedConversation(
-                                        contact.userInfo.uid
-                                    )
                                 }}
                                 key={contact.userInfo.uid}
                             >
@@ -84,7 +151,7 @@ export const ConversationsList: React.FC = () => {
             </SubContainer>
             <hr />
             <SubContainer className="conversations-list">
-                <h3>Contatos inativos</h3>
+                <h3>Contatos</h3>
                 {contacts?.length ? (
                     contacts
                         .filter(contact => !chatUsersIds.includes(contact.uid))

@@ -36,18 +36,27 @@ export const SubContainer = styled.ul<ContainerProps>`
         width: 100%;
     }
 
-    .contacts-list-item + .contacts-list-item {
+    .conversation-list-li + .conversation-list-li,
+    .contacts-list-li + .contacts-list-li {
         margin-top: 10px;
     }
+    
 
-    .conversation-list-li {
-        padding: 10px 15px;
-        border-radius: 10px;
+    .contacts-list-item h5 {
+        font-size: 1rem !important;
     }
+
+    .contacts-list-li,
+    .conversation-list-li {
+        padding: 10px 5px;
+        padding-right: 15px;
+    }
+
     .conversation-list-li.selected {
+        border-right: 3px solid orchid;
         background: linear-gradient(
             90deg,
-            rgba(200, 0, 200, 0.05) 10%,
+            transparent 10%,
             rgba(200, 0, 200, 0.1) 100%
         );
     }
